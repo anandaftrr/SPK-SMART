@@ -28,16 +28,16 @@ if ($result->num_rows == 1) {
     // Redirect ke halaman sesuai peran (role)
     switch ($row['role']) {
         case 'admin':
-            header('Location: dashboard_admin.php');
+            header('Location: admin_dashboard.php');
             break;
         case 'pimpinan':
-            header('Location: dashboard_pimpinan.php');
+            header('Location: pimpinan_dashboard.php');
             break;
         case 'penilai':
-            header('Location: dashboard_penilai.php');
+            header('Location: penilai_dashboard.php');
             break;
         case 'kelurahan':
-            header('Location: dashboard_kelurahan.php');
+            header('Location: kelurahan_dashboard.php');
             break;
         default:
             // Jika role tidak dikenali, redirect ke halaman default

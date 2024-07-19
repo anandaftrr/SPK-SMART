@@ -1,27 +1,22 @@
-<?php 
-include("koneksi.php");
-?>
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
 </head>
 <body>
-<nav class="main-header navbar navbar-expand navbar-white navbar-light">
+<nav class="main-header navbar navbar-expand navbar-light" style="background-color: rgb(5,68,104);">
     <!-- Left navbar links -->
     <ul class="navbar-nav">
         <li class="nav-item">
-            <a class="nav-link" data-widget="pushmenu" href="#"><i class="fa fa-bars" aria-hidden="true"></i></a>
+            <a class="nav-link" data-widget="pushmenu" href="#"><i class="fa fa-bars" style="color: #fcfcfc;" aria-hidden="true"></i></a>
         </li>
     </ul>
 
     <!-- Right navbar links -->
     <ul class="navbar-nav ml-auto">
         <li class="nav-item">
-            <a class="nav-link" href="#" onclick="logout()">
+            <a class="nav-link"style="color: #fcfcfc;"  href="#" onclick="logout()">
                 <i class="fas fa-sign-out-alt"></i> Logout
             </a>
         </li>
