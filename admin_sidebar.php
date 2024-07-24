@@ -19,7 +19,7 @@
                 </li>
 
                 <li class="nav-item">
-                    <a href="?p=kriteria" class="nav-link">
+                    <a href="admin_kelolakriteria.php" class="nav-link">
                         <i class="nav-icon fas fa-solid fa-list-ol" style="color: #fcfcfc;"></i>
                         <p style="color: #fcfcfc;"> Kelola Kriteria </p>
                     </a>

@@ -12,18 +12,12 @@
                 </li>
 
                 <li class="nav-item">
-                    <a href="?p=user" class="nav-link">
-                        <i class="nav-icon fas fa-solid fa-file" style="color: #fcfcfc;"></i>
-                        <p style="color: #fcfcfc;"> Data Administrasi</p>
+                    <a href="?p=alternatif" class="nav-link">
+                        <i class="nav-icon fa-clipboard-check" style="color: #fcfcfc;"></i>
+                        <p style="color: #fcfcfc;"> Penilaian Alternatif </p>
                     </a>
                 </li>
 
-                <li class="nav-item">
-                    <a href="?p=proses" class="nav-link">
-                        <i class="nav-icon fas fa-solid fa-trophy" style="color: #fcfcfc;"></i>
-                        <p style="color: #fcfcfc;"> Hasil Administrasi </p>
-                    </a>
-                </li>
             </ul>
         </nav>
         <!-- /.sidebar-menu -->

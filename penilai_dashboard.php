@@ -8,7 +8,7 @@ if (!isset($_SESSION['id_user']) || empty($_SESSION['id_user'])) {
 }
 
 // Periksa peran pengguna
-if ($_SESSION['role'] != 'admin') {
+if ($_SESSION['role'] != 'penilai') {
     // Jika bukan admin, redirect ke halaman lain atau berikan pesan akses ditolak
     header('Location: unauthorized.php');
     exit;
@@ -47,7 +47,7 @@ if ($_SESSION['role'] != 'admin') {
 <body class="hold-transition sidebar-mini">
     <div class="wrapper">
         <?php include 'header.php'; ?>
-        <?php include 'admin_sidebar.php'; ?>
+        <?php include 'penilai_sidebar.php'; ?>
         <div class="content-wrapper">
             <section class="content">
             <br>
@@ -66,7 +66,7 @@ if ($_SESSION['role'] != 'admin') {
                                     <div class="row g-0 w-100">
                                         <div class="">
                                             <div class="p-3 m-1">
-                                                <h4>Selamat Datang, Admin!</h4>
+                                                <h4>Selamat Datang, Penilai!</h4>
                                                 <p>Sistem Pendukung Keputusan Pemilihan Kelurahan Terbaik Tingkat Kota Padang dengan Metode SMART</p>
                                             </div>
                                         </div>
