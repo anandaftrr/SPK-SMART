@@ -5,19 +5,17 @@
         <nav class="mt-2" >
             <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
                 <li class="nav-item">
-                    <a href="admin_dashboard.php" class="nav-link">
+                    <a href="penilai_dashboard.php" class="nav-link">
                         <i class="nav-icon fas fa-home" style="color: #fcfcfc;"></i>
                         <p style="color: #fcfcfc;"> Dashboard </p>
                     </a>
                 </li>
-
                 <li class="nav-item">
-                    <a href="?p=alternatif" class="nav-link">
-                        <i class="nav-icon fa-clipboard-check" style="color: #fcfcfc;"></i>
-                        <p style="color: #fcfcfc;"> Penilaian Alternatif </p>
+                    <a href="penilai_nilai.php" class="nav-link">
+                        <i class="nav-icon fas fa-clipboard-check" style="color: #fcfcfc;"></i>
+                        <p style="color: #fcfcfc;"> Data Penilaian </p>
                     </a>
                 </li>
-
             </ul>
         </nav>
         <!-- /.sidebar-menu -->

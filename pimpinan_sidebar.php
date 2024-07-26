@@ -5,13 +5,13 @@
         <nav class="mt-2" >
             <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
                 <li class="nav-item">
-                    <a href="admin_dashboard.php" class="nav-link">
+                    <a href="pimpinan_dashboard.php" class="nav-link">
                         <i class="nav-icon fas fa-home" style="color: #fcfcfc;"></i>
                         <p style="color: #fcfcfc;"> Dashboard </p>
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a href="?p=proses" class="nav-link">
+                    <a href="pimpinan_hasilsmart.php" class="nav-link">
                         <i class="nav-icon fas fa-solid fa-trophy" style="color: #fcfcfc;"></i>
                         <p style="color: #fcfcfc;"> Hasil Proses SMART </p>
                     </a>

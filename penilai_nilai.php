@@ -9,7 +9,7 @@ if (!isset($_SESSION['id_user']) || empty($_SESSION['id_user'])) {
 }
 
 // Periksa peran pengguna
-if ($_SESSION['role'] != 'kelurahan') {
+if ($_SESSION['role'] != 'penilai') {
     // Jika bukan admin, redirect ke halaman lain atau berikan pesan akses ditolak
     header('Location: unauthorized.php');
     exit;
@@ -48,53 +48,17 @@ if ($_SESSION['role'] != 'kelurahan') {
 <body class="hold-transition sidebar-mini">
     <div class="wrapper">
         <?php include 'header.php'; ?>
-        <?php include 'kelurahan_sidebar.php'; ?>
+        <?php include 'penilai_sidebar.php'; ?>
         <div class="content-wrapper">
             <section class="content">
             <br>
             <!-- Page Title -->
             <div class="pagetitle p-2">
-                <h1>Dashboard</h1>
+                <h1>Data Penilaian</h1>
             </div>
             <!-- End Page Title -->
             <!-- Home Page -->
-                <br>
-                <div class="container-fluid">
-                <div class="row">
-                        <div class="col-12 col-md-6 d-flex">
-                            <div class="card flex-fill border-0 illustration">
-                                <div class="card-body p-0 d-flex flex-fill">
-                                    <div class="row g-0 w-100">
-                                        <div class="">
-                                            <div class="p-3 m-1">
-                                                <h4>Selamat Datang, Kelurahan!</h4>
-                                                <p>Sistem Pendukung Keputusan Pemilihan Kelurahan Terbaik Tingkat Kota Padang dengan Metode SMART</p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-12 col-md-6 d-flex">
-                            <div class="card flex-fill border-0">
-                                <div class="card-body py-4">
-                                    <div class="d-flex align-items-start">
-                                        <div class="flex-grow-1">
-                                            <h4 class="mb-2">
-                                                Metode SMART
-                                            </h4>
-                                            <div class="mb-0">
-                                            <p>SMART (Simple Multi Attribute Rating Technique) merupakan metode pengambilan keputusan yang multi-atribut. Teknik pembuatan keputusan multi-atribut ini digunakan untuk mendukung pembuat keputusan dalam memilih antara beberapa alternatif.</p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                </div>
-            <!-- End Home Page -->
-            </section>
-            <br>
+    
         </div>
     </div>
     

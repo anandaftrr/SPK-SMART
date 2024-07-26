@@ -1,5 +1,6 @@
 <?php
 session_start();
+include 'koneksi.php';
 
 // Periksa apakah pengguna sudah login
 if (!isset($_SESSION['id_user']) || empty($_SESSION['id_user'])) {
