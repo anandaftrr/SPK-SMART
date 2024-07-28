@@ -60,36 +60,44 @@ if ($_SESSION['role'] != 'kelurahan') {
             <!-- Home Page -->
              <div class="row">
                 <div class="card-body col-lg-12 col-lg-offset-3">
-                <a href="kelurahan_edit_datawilayah.php"><button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#datawilayahedit" style="position: absolute; top: 10px; right: 35px;">
-                Edit Data
-                </button></a>
+                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#datawilayahadd" style="position: absolute; top: 10px; right: 35px;">
+                Simpan Data
+                </button>
                 <br>
                     <form action="#" method="post">
                         <div class="form-group p-2 m-1">
                             <h4 style="font-weight: bold;">Identitas Desa/Kelurahan</h4>
                             <hr style="border: 1px solid black;">
                             <label for="kelurahan">Kelurahan</label>
-                            <input name="kelurahan" id="kelurahan" class="form-control" readonly></input>
+                            <input name="kelurahan" id="kelurahan" class="form-control" required></input>
                         </div>
                         <div class="form-group p-2 m-1">
                             <label for="kode_kelurahan">Kode Kelurahan</label>
-                            <input name="kode_kelurahan" id="kode_kelurahan" class="form-control" readonly></input>
+                            <input name="kode_kelurahan" id="kode_kelurahan" class="form-control" required></input>
                         </div>
                         <div class="form-group p-2 m-1">
                             <label for="tipologi">Tipologi</label>
-                            <input name="tipologi" id="tipologi" class="form-control" readonly></input>
+                            <select name="tipologi" id="tipologi" class="form-control" required>
+                                <option value="">-Pilih-</option>
+                            </select>
                         </div>
                         <div class="form-group p-2 m-1">
                             <label for="orbitas">Orbitas Wilayah ke Kabupaten/Kota</label>
-                            <input name="orbitas" id="orbitas" class="form-control" readonly></input>
+                            <select name="orbitas" id="orbitas" class="form-control" required>
+                                <option value="">-Pilih-</option>
+                            </select>
                         </div>
                         <div class="form-group p-2 m-1">
                             <label for="kondisi_wilayah">Kondisi Wilayah</label>
-                            <input name="kondisi_wilayah" id="kondisi_wilayah" class="form-control" readonly></input>
+                            <select name="kondisi_wilayah" id="kondisi_wilayah" class="form-control" required>
+                                <option value="">-Pilih-</option>
+                            </select>
                         </div>
                         <div class="form-group p-2 m-1">
                             <label for="batas_desa">Batas Desa</label>
-                            <input name="batas_desa" id="batas_desa" class="form-control" readonly></input>
+                            <select name="batas_desa" id="batas_desa" class="form-control" required>
+                                <option value="">-Pilih-</option>
+                            </select>
                         </div>
                         <br>
                         <div class="form-group p-2 m-1">
@@ -99,11 +107,11 @@ if ($_SESSION['role'] != 'kelurahan') {
                             <table>
                                 <tr>
                                     <td style="font-weight: semibold; padding: 10px;" width="120">Tahun Lalu</td>
-                                    <td><input name="umur<15_lalu" id="umur<15_lalu" class="form-control" readonly></input></td>
+                                    <td><input name="umur<15_lalu" id="umur<15_lalu" class="form-control" required></input></td>
                                 </tr>
                                 <tr>
                                     <td style="font-weight: semibold; padding: 10px;" width="120">Tahun Ini</td>
-                                    <td><input name="umur<15_ini" id="umur<15_ini" class="form-control" readonly></input></td>
+                                    <td><input name="umur<15_ini" id="umur<15_ini" class="form-control" required></input></td>
                                 </tr>
                             </table>
                         </div>  
@@ -112,11 +120,11 @@ if ($_SESSION['role'] != 'kelurahan') {
                             <table>
                                 <tr>
                                     <td style="font-weight: semibold; padding: 10px;" width="120">Tahun Lalu</td>
-                                    <td><input name="umur15-56_lalu" id="umur15-56_lalu" class="form-control" readonly></input></td>
+                                    <td><input name="umur15-56_lalu" id="umur15-56_lalu" class="form-control" required></input></td>
                                 </tr>
                                 <tr>
                                     <td style="font-weight: semibold; padding: 10px;" width="120">Tahun Ini</td>
-                                    <td><input name="umur15-56_ini" id="umur15-56_ini" class="form-control" readonly></input></td>
+                                    <td><input name="umur15-56_ini" id="umur15-56_ini" class="form-control" required></input></td>
                                 </tr>
                             </table>
                         </div> 
@@ -125,11 +133,11 @@ if ($_SESSION['role'] != 'kelurahan') {
                             <table>
                                 <tr>
                                     <td style="font-weight: semibold; padding: 10px;" width="120">Tahun Lalu</td>
-                                    <td><input name="umur>56_lalu" id="umur>56_lalu" class="form-control" readonly></input></td>
+                                    <td><input name="umur>56_lalu" id="umur>56_lalu" class="form-control" required></input></td>
                                 </tr>
                                 <tr>
                                     <td style="font-weight: semibold; padding: 10px;" width="120">Tahun Ini</td>
-                                    <td><input name="umur>56_ini" id="umur>56_ini" class="form-control" readonly></input></td>
+                                    <td><input name="umur>56_ini" id="umur>56_ini" class="form-control" required></input></td>
                                 </tr>
                             </table>
                         </div> 
@@ -141,11 +149,11 @@ if ($_SESSION['role'] != 'kelurahan') {
                             <table>
                                 <tr>
                                     <td style="font-weight: semibold; padding: 10px;" width="120">Tahun Lalu</td>
-                                    <td><input name="penduduk_total_lalu" id="penduduk_total_lalu" class="form-control" readonly></input></td>
+                                    <td><input name="penduduk_total_lalu" id="penduduk_total_lalu" class="form-control" required></input></td>
                                 </tr>
                                 <tr>
                                     <td style="font-weight: semibold; padding: 10px;" width="120">Tahun Ini</td>
-                                    <td><input name="penduduk_total_ini" id="penduduk_total_ini" class="form-control" readonly></input></td>
+                                    <td><input name="penduduk_total_ini" id="penduduk_total_ini" class="form-control" required></input></td>
                                 </tr>
                             </table>
                         </div>
@@ -154,11 +162,11 @@ if ($_SESSION['role'] != 'kelurahan') {
                             <table>
                                 <tr>
                                     <td style="font-weight: semibold; padding: 10px;" width="120">Tahun Lalu</td>
-                                    <td><input name="penduduk_lk_lalu" id="penduduk_lk_lalu" class="form-control" readonly></input></td>
+                                    <td><input name="penduduk_lk_lalu" id="penduduk_lk_lalu" class="form-control" required></input></td>
                                 </tr>
                                 <tr>
                                     <td style="font-weight: semibold; padding: 10px;" width="120">Tahun Ini</td>
-                                    <td><input name="penduduk_lk_ini" id="penduduk_lk_ini" class="form-control" readonly></input></td>
+                                    <td><input name="penduduk_lk_ini" id="penduduk_lk_ini" class="form-control" required></input></td>
                                 </tr>
                             </table>
                         </div>
@@ -167,11 +175,11 @@ if ($_SESSION['role'] != 'kelurahan') {
                             <table>
                                 <tr>
                                     <td style="font-weight: semibold; padding: 10px;" width="120">Tahun Lalu</td>
-                                    <td><input name="penduduk_pr_lalu" id="penduduk_pr_lalu" class="form-control" readonly></input></td>
+                                    <td><input name="penduduk_pr_lalu" id="penduduk_pr_lalu" class="form-control" required></input></td>
                                 </tr>
                                 <tr>
                                     <td style="font-weight: semibold; padding: 10px;" width="120">Tahun Ini</td>
-                                    <td><input name="penduduk_pr_ini" id="penduduk_pr_ini" class="form-control" readonly></input></td>
+                                    <td><input name="penduduk_pr_ini" id="penduduk_pr_ini" class="form-control" required></input></td>
                                 </tr>
                             </table>
                         </div>
@@ -180,11 +188,11 @@ if ($_SESSION['role'] != 'kelurahan') {
                             <table>
                                 <tr>
                                     <td style="font-weight: semibold; padding: 10px;" width="120">Tahun Lalu</td>
-                                    <td><input name="penduduk_kk_lalu" id="penduduk_kk_lalu" class="form-control" readonly></input></td>
+                                    <td><input name="penduduk_kk_lalu" id="penduduk_kk_lalu" class="form-control" required></input></td>
                                 </tr>
                                 <tr>
                                     <td style="font-weight: semibold; padding: 10px;" width="120">Tahun Ini</td>
-                                    <td><input name="penduduk_kk_ini" id="penduduk_kk_ini" class="form-control" readonly></input></td>
+                                    <td><input name="penduduk_kk_ini" id="penduduk_kk_ini" class="form-control" required></input></td>
                                 </tr>
                             </table>
                         </div>
