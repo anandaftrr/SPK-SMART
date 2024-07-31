@@ -13,7 +13,7 @@ $username = mysqli_real_escape_string($koneksi, $username);
 $password = mysqli_real_escape_string($koneksi, $password);
 
 // Query untuk mencari pengguna berdasarkan username dan password
-$sql = "SELECT * FROM user WHERE username='$username' AND password='$password'";
+$sql = "SELECT * FROM users WHERE username='$username' AND password='$password'";
 $result = $koneksi->query($sql);
 
 if ($result->num_rows == 1) {

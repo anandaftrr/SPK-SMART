@@ -58,10 +58,87 @@ if ($_SESSION['role'] != 'admin') {
             </div>
             <!-- End Page Title -->
             <!-- Home Page -->
-    
+            <div class="table-responsive">
+                <div class="card mt-3">
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table id="myTable" class="table table-striped" style="width:100%" >
+                <thead>
+                    <tr>
+                        <th style="text-align: center;">Username</th>
+                        <th style="text-align: center;">Password</th>
+                        <th style="text-align: center;">Role</th>
+                        <th style="text-align: center;">Edit</th>
+                        <th style="text-align: center;">Hapus</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php
+                    $users = $koneksi->query(
+                        'SELECT * FROM users ORDER BY id_user ASC'
+                    );
+                    foreach ($users as $key) {
+
+                        $nama = 'userdel' . $key['id_user'];
+                        $alamat = 'userdel';
+                        ?>
+                        <tr align="center">
+                            <td>
+                                <?= $key['username'] ?>
+                            </td>
+                            <td>
+                                <?= $key['password'] ?>
+                            </td>
+                            <td>
+                                <?= $key['role'] ?>
+                            </td>
+                            <td>
+                                <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#useredit<?= $key[
+                                    'id_user'
+                                ] ?>">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                            </td>
+                            <td>
+                                <button type="button" class="btn btn-danger btn-sm" onclick="<?= $nama ?>()">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </td>
+                        </tr>
+                    <?php
+                    }
+                    ?> 
+                </tbody>
+            </table>
+            <br>
+            <div class="d-flex justify-content-end">
+                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#adminadd">
+                    Tambah Data
+                </button>
+            </div>
         </div>
     </div>
-    
+</div>
+<!--Tambah Data-->
+</div>
+</div> 
+
+<script> // Membuat data table memiliki fungsi show dan search
+        $(document).ready(function() {
+            $('#myTable').DataTable(); //Mengubah tabel dengan ID myTable menjadi tabel yang interaktif dengan fitur pencarian, paginasi, dan pengurutan.
+        });
+
+
+        ClassicEditor
+            .create(document.querySelector('#detail'))
+            .then(editor => {
+                console.log(editor);
+            })
+            .catch(error => {
+                console.error(error);
+            });
+</script>
+    </div>
 </body>
 
 </html>

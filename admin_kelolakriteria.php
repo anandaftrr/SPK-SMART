@@ -75,23 +75,28 @@ if ($_SESSION['role'] != 'admin') {
                 </thead>
                 <tbody>
                     <?php
-                    $kriteria = $koneksi->query("SELECT * FROM kriteria ORDER BY id_kriteria ASC");
+                    $kriteria = $koneksi->query(
+                        'SELECT * FROM kriteria ORDER BY id_kriteria ASC'
+                    );
                     foreach ($kriteria as $key) {
-                        $nama = "kriteriadel" .  $key['id_kriteria'];
-                        $alamat = "kriteriadel";
-                    ?>
+
+                        $nama = 'kriteriadel' . $key['id_kriteria'];
+                        $alamat = 'kriteriadel';
+                        ?>
                         <tr align="center">
                             <td>
                                 <?= $key['nama_kriteria'] ?>
                             </td>
                             <td>
-                                <?= $key['bobot'] ?>
-                            </td>
-                            <td>
                                 <?= $key['ket_kriteria'] ?>
                             </td>
                             <td>
-                                <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#kriteriaedit<?= $key['id_kriteria'] ?>">
+                                <?= $key['bobot'] ?>
+                            </td>
+                            <td>
+                                <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#kriteriaedit<?= $key[
+                                    'id_kriteria'
+                                ] ?>">
                                     <i class="fas fa-edit"></i>
                                 </button>
                             </td>
@@ -101,7 +106,9 @@ if ($_SESSION['role'] != 'admin') {
                                 </button>
                             </td>
                         </tr>
-                    <?php } ?> 
+                    <?php
+                    }
+                    ?> 
                 </tbody>
             </table>
             <br>
