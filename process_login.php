@@ -19,12 +19,12 @@ $result = $koneksi->query($sql);
 if ($result->num_rows == 1) {
     // Pengguna ditemukan, ambil data pengguna
     $row = $result->fetch_assoc();
-    
+
     // Simpan informasi pengguna ke dalam session
-    $_SESSION['id_user'] = $row['id_user'];
+    $_SESSION['id_user'] = $row['id'];
     $_SESSION['username'] = $row['username'];
     $_SESSION['role'] = $row['role'];
-    
+
     // Redirect ke halaman sesuai peran (role)
     switch ($row['role']) {
         case 'admin':
@@ -51,4 +51,3 @@ if ($result->num_rows == 1) {
 }
 
 $koneksi->close();
-?>
