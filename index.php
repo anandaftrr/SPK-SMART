@@ -2,10 +2,8 @@
 
 session_start();
 
-include 'config/base_url.php';
-
 if ($_SESSION['role'] == 'admin') {
-    header('Location: ' . $baseURL . '../admin/dashboard');
+    header('Location: admin/dashboard.php');
 } else {
-    header('Location: ' . $baseURL . '../autentikasi/login.php');
+    header('Location: autentikasi/login.php');
 }

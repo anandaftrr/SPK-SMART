@@ -4,6 +4,9 @@ session_start();
 // Sambungkan ke database
 include '../koneksi.php';
 
+// baseurl
+include '../config/base_url.php';
+
 // Tangkap data dari form login
 $username = $_POST['username'];
 $password = $_POST['password'];
@@ -28,7 +31,7 @@ if ($result->num_rows == 1) {
     // Redirect ke halaman sesuai peran (role)
     switch ($row['role']) {
         case 'admin':
-            header('Location: admin_dashboard.php');
+            header('Location: ../admin/dashboard.php');
             break;
         case 'pimpinan':
             header('Location: pimpinan_dashboard.php');
