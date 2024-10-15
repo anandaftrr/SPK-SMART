@@ -1,7 +1,7 @@
 <?php
 session_start();
 
-// Periksa apakah pengguna sudah loginn
+// Periksa apakah pengguna sudah loginnnn
 if (!isset($_SESSION['id_user']) || empty($_SESSION['id_user'])) {
     header('Location: login.php');
     exit;
