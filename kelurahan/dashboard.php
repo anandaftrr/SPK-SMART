@@ -1,6 +1,6 @@
 <?php
 session_start();
-include 'koneksi.php';
+include '../koneksi.php';
 
 // Periksa apakah pengguna sudah login
 if (!isset($_SESSION['id_user']) || empty($_SESSION['id_user'])) {
@@ -47,20 +47,20 @@ if ($_SESSION['role'] != 'kelurahan') {
 
 <body class="hold-transition sidebar-mini">
     <div class="wrapper">
-        <?php include 'header.php'; ?>
-        <?php include 'kelurahan_sidebar.php'; ?>
+        <?php include '../layouts/header.php'; ?>
+        <?php include '../layouts/kelurahan_sidebar.php'; ?>
         <div class="content-wrapper">
             <section class="content">
-            <br>
-            <!-- Page Title -->
-            <div class="pagetitle p-2">
-                <h1>Dashboard</h1>
-            </div>
-            <!-- End Page Title -->
-            <!-- Home Page -->
+                <br>
+                <!-- Page Title -->
+                <div class="pagetitle p-2">
+                    <h1>Dashboard</h1>
+                </div>
+                <!-- End Page Title -->
+                <!-- Home Page -->
                 <br>
                 <div class="container-fluid">
-                <div class="row">
+                    <div class="row">
                         <div class="col-12 col-md-6 d-flex">
                             <div class="card flex-fill border-0 illustration">
                                 <div class="card-body p-0 d-flex flex-fill">
@@ -84,20 +84,20 @@ if ($_SESSION['role'] != 'kelurahan') {
                                                 Metode SMART
                                             </h4>
                                             <div class="mb-0">
-                                            <p>SMART (Simple Multi Attribute Rating Technique) merupakan metode pengambilan keputusan yang multi-atribut. Teknik pembuatan keputusan multi-atribut ini digunakan untuk mendukung pembuat keputusan dalam memilih antara beberapa alternatif.</p>
+                                                <p>SMART (Simple Multi Attribute Rating Technique) merupakan metode pengambilan keputusan yang multi-atribut. Teknik pembuatan keputusan multi-atribut ini digunakan untuk mendukung pembuat keputusan dalam memilih antara beberapa alternatif.</p>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                </div>
-            <!-- End Home Page -->
+                    </div>
+                    <!-- End Home Page -->
             </section>
             <br>
         </div>
     </div>
-    
+
 </body>
 
 </html>

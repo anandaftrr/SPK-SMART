@@ -14,6 +14,36 @@ if ($_SESSION['role'] != 'admin') {
     header('Location: unauthorized.php');
     exit;
 }
+
+if ((isset($_GET['action'])) && ($_GET['action'] == 'add')) {
+    $periode = $_POST['periode'];
+
+    $checkPeriode = $koneksi->query(
+        "SELECT * FROM periode WHERE periode = '$periode'"
+    );
+
+    if ($checkPeriode->num_rows != 0) {
+        $failed = 'Periode sudah ada!!';
+    } else {
+        $insert = $koneksi->query(
+            "INSERT INTO periode (periode) VALUES ('$periode')"
+        );
+        if ($insert) {
+            $success = 'Berhasil menambahkan periode!';
+        } else {
+            $failed = 'Gagal menambahkan periode!';
+        }
+    }
+}
+if ((isset($_GET['action'])) && ($_GET['action'] == 'delete')) {
+    $status = $_GET['status'];
+
+    if ($status == 'success') {
+        $success = 'Berhasil menghapus periode!';
+    } else if ($status == 'failed') {
+        $failed = 'Gagal menghapus periode!!';
+    }
+}
 ?>
 
 <!DOCTYPE html>
@@ -54,77 +84,53 @@ if ($_SESSION['role'] != 'admin') {
                 <br>
                 <!-- Page Title -->
                 <div class="pagetitle p-2">
-                    <h1>Kelola User</h1>
+                    <h1>Kelola Periode</h1>
                 </div>
                 <!-- End Page Title -->
                 <!-- Home Page -->
-                <?php if ((isset($_GET['add'])) && ($_GET['add'] == 'success')): ?>
+                <?php if (isset($success)): ?>
                     <div class="alert alert-success alert-dismissible fade show" role="alert">
-                        <strong>Success!</strong> Data user berhasil ditambahkan!
+                        <strong>Success!</strong> <?= $success ?>
                     </div>
-                <?php endif; ?>
-                <?php if ((isset($_GET['delete'])) && ($_GET['delete'] == 'success')): ?>
-                    <div class="alert alert-success alert-dismissible fade show" role="alert">
-                        <strong>Success!</strong> Data berhasil dihapus.
-                    </div>
-                <?php elseif ((isset($_GET['delete'])) && ($_GET['delete'] == 'failed')): ?>
+                <?php elseif (isset($failed)): ?>
                     <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                        <strong>Failed!</strong> Data gagal dihapus.
+                        <strong>Failed!</strong> <?= $failed ?>
                     </div>
                 <?php endif; ?>
                 <div class="table-responsive">
                     <div class="card mt-3">
                         <div class="card-body">
                             <div class="d-flex justify-content-end mb-3">
-                                <a href="tambah.php">
-                                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#adminadd">
-                                        <i class="fas fa-solid fa-plus"></i> Tambah User
-                                    </button>
-                                </a>
+                                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#periodAdd">
+                                    <i class="fas fa-solid fa-plus"></i> Tambah Periode
+                                </button>
                             </div>
                             <div class="table-responsive">
                                 <table id="myTable" class="table table-striped" style="width:100%">
                                     <thead>
                                         <tr>
-                                            <th style="text-align: center;">Username</th>
-                                            <th style="text-align: center;">Role</th>
+                                            <th style="text-align: center;">Periode</th>
                                             <th style="text-align: center;">Aksi</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         <?php
-                                        $users = $koneksi->query(
-                                            'SELECT * FROM users ORDER BY id ASC'
+                                        $periods = $koneksi->query(
+                                            'SELECT * FROM periode ORDER BY periode ASC'
                                         );
-                                        foreach ($users as $key) {
-
-                                            $nama = 'userdel' . $key['id'];
-                                            $alamat = 'userdel';
                                         ?>
+                                        <?php foreach ($periods as $periode): ?>
                                             <tr align="center">
                                                 <td>
-                                                    <?= $key['username'] ?>
+                                                    <?= $periode['periode'] ?>
                                                 </td>
                                                 <td>
-                                                    <?= $key['role'] ?>
-                                                </td>
-                                                <td>
-                                                    <a href="/admin/user/ubah.php?id=<?= $key['id']; ?>">
-                                                        <button type="button" class="btn btn-primary btn-sm">
-                                                            <i class="fas fa-edit"></i>
-                                                        </button>
-                                                    </a>
-                                                    <?php if ($key['role'] == 'kelurahan'): ?>
-                                                        <button type="button" class="btn btn-danger btn-sm" onclick="hapusUser('<?= $key['id']; ?>','<?= $key['username']; ?>')">
-                                                            <i class="fas fa-trash"></i>
-                                                        </button>
-                                                    <?php endif; ?>
-
+                                                    <button type="button" class="btn btn-danger btn-sm" onclick="hapusPeriode('<?= $periode['id']; ?>','<?= $periode['periode']; ?>')">
+                                                        <i class="fas fa-trash"></i>
+                                                    </button>
                                                 </td>
                                             </tr>
-                                        <?php
-                                        }
-                                        ?>
+                                        <?php endforeach; ?>
                                     </tbody>
                                 </table>
                             </div>
@@ -132,8 +138,32 @@ if ($_SESSION['role'] != 'admin') {
                     </div>
                     <!--Tambah Data-->
                 </div>
+            </section>
         </div>
-
+        <!-- Modal Tambah periode-->
+        <div class="modal fade" id="periodAdd" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Tambah Periode</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <form class="mx-3 mt-3" action="lihat.php?action=add" method="POST" onsubmit="">
+                            <div class="form-group">
+                                <label for="periode">Periode</label>
+                                <input type="number" class="form-control" id="periode" name="periode" min="2020" max="2024" required>
+                            </div>
+                            <div class="form-group col-md-6">
+                                <button type="submit" class="btn btn-primary" name="save">Simpan</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
         <script>
             // Membuat data table memiliki fungsi show dan search
             $(document).ready(function() {
@@ -152,7 +182,7 @@ if ($_SESSION['role'] != 'admin') {
         </script>
     </div>
     <script>
-        function hapusUser(id = null, username = null) {
+        function hapusPeriode(id = null, periode = null) {
             const swalWithBootstrapButtons = Swal.mixin({
                 customClass: {
                     confirmButton: 'btn btn-success',
@@ -162,8 +192,8 @@ if ($_SESSION['role'] != 'admin') {
             })
 
             swalWithBootstrapButtons.fire({
-                title: 'Hapus user ini?',
-                text: "Anda akan menghapus data " + username,
+                title: 'Hapus periode ini?',
+                text: "Anda akan menghapus periode " + periode,
                 icon: 'warning',
                 showCancelButton: true,
                 confirmButtonText: 'Ya, yakin!',
@@ -171,7 +201,7 @@ if ($_SESSION['role'] != 'admin') {
                 reverseButtons: true
             }).then((result) => {
                 if (result.isConfirmed) {
-                    window.location.href = '/admin/user/hapus.php?id=' + id;
+                    window.location.href = '/admin/periode/hapus.php?id=' + id;
                 } else if (
                     result.dismiss === Swal.DismissReason.cancel
                 ) {

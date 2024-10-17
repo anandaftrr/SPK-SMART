@@ -1,6 +1,6 @@
 <?php
 session_start();
-include 'koneksi.php';
+include '../koneksi.php';
 
 // Periksa apakah pengguna sudah login
 if (!isset($_SESSION['id_user']) || empty($_SESSION['id_user'])) {
@@ -48,44 +48,44 @@ if ($_SESSION['role'] != 'kelurahan') {
 
 <body class="hold-transition sidebar-mini">
     <div class="wrapper">
-        <?php include 'header.php'; ?>
-        <?php include 'kelurahan_sidebar.php'; ?>
+        <?php include '../layouts/header.php'; ?>
+        <?php include '../layouts/kelurahan_sidebar.php'; ?>
         <div class="content-wrapper">
             <section class="content">
-            <br>
-            <!-- Page Title -->
-            <div class="pagetitle p-2">
-                <h1>Hasi Administrasi</h1>
-            </div>
-            <!-- End Page Title -->
-            <!-- Home Page -->
-            <div class="row">
-                <div class="col-md-3"></div>
-                <div class="col-md-6">
-                    <div class="card mt-3">
-                    <div class="card-body">
-                    <center>
-                    <h4>Total Nilai Akhir</h4>
-                    </center>
-                    <center>
-                    <h1 class="pagetitle p-2">188</h1> 
-                    </center>
-                    <center>
-                        <h4>
-                        <span class="badge rounded-pill bg-primary">Rekomendasi</span>
-                        </h4>
-                    </center>
-            </div>
+                <br>
+                <!-- Page Title -->
+                <div class="pagetitle p-2">
+                    <h1>Hasi Administrasi</h1>
+                </div>
+                <!-- End Page Title -->
+                <!-- Home Page -->
+                <div class="row">
+                    <div class="col-md-3"></div>
+                    <div class="col-md-6">
+                        <div class="card mt-3">
+                            <div class="card-body">
+                                <center>
+                                    <h4>Total Nilai Akhir</h4>
+                                </center>
+                                <center>
+                                    <h1 class="pagetitle p-2">188</h1>
+                                </center>
+                                <center>
+                                    <h4>
+                                        <span class="badge rounded-pill bg-primary">Rekomendasi</span>
+                                    </h4>
+                                </center>
+                            </div>
 
-        </div>
-    </div>
-</div>
-            <!-- End Home Page -->
+                        </div>
+                    </div>
+                </div>
+                <!-- End Home Page -->
             </section>
             <br>
         </div>
     </div>
-    
+
 </body>
 
 </html>

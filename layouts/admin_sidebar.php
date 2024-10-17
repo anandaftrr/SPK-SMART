@@ -17,6 +17,12 @@
                     </a>
                 </li>
                 <li class="nav-item">
+                    <a href="/admin/periode/lihat.php" class="nav-link">
+                        <i class="nav-icon fas fa-fa-solid fa-clock" style="color: #fcfcfc;"></i>
+                        <p style="color: #fcfcfc;"> Kelola Periode </p>
+                    </a>
+                </li>
+                <li class="nav-item">
                     <a href="admin_kelolaalternatif.php" class="nav-link">
                         <i class="nav-icon fas fa-user" style="color: #fcfcfc;"></i>
                         <p style="color: #fcfcfc;"> Kelola Alternatif </p>
