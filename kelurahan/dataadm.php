@@ -61,6 +61,46 @@ if ($_SESSION['role'] != 'kelurahan') {
                 <!-- Home Page -->
                 <div class="card mt-3">
                     <div class="card-body">
+                        <?php
+                        $bidangs = $koneksi->query(
+                            "SELECT * FROM bidang"
+                        );
+                        $indikators = $koneksi->query(
+                            "SELECT * FROM indikator"
+                        );
+                        $sub_indikators = $koneksi->query(
+                            "SELECT * FROM sub_indikator"
+                        );
+                        $nilai_sub_indikators = $koneksi->query(
+                            "SELECT * FROM nilai_sub_indikator"
+                        );
+                        ?>
+                        <?php foreach ($bidangs as $bidang): ?>
+                            <h4 class="mt-5" style="font-weight: bold;">Bidang <?= $bidang['nama_bidang'] ?></h4>
+                            <hr style="border: 1px solid black;">
+                            <?php foreach ($indikators as $indikator): ?>
+                                <?php if ($indikator['id_bidang'] == $bidang['id']): ?>
+                                    <div class="border border-secondary rounded m-3 p-2">
+                                        <h5 style="font-weight: bold;">Indikator: <?= $indikator['nama_indikator'] ?></h5>
+                                        <?php foreach ($sub_indikators as $sub_indikator): ?>
+                                            <?php if ($indikator['id'] == $sub_indikator['id_indikator']): ?>
+                                                <div class="form-group p-2 m-1">
+                                                    <label for="usia_kurang_15"><?= $sub_indikator['nama_sub_indikator'] ?></label>
+                                                    <select class="form-control" name="role" id="role" required>
+                                                        <option value="" selected disabled>-Pilih-</option>
+                                                        <?php foreach ($nilai_sub_indikators as $nilai_sub_indikator): ?>
+                                                            <?php if ($sub_indikator['id'] == $nilai_sub_indikator['id_sub_indikator']): ?>
+                                                                <option value="<?= $nilai_sub_indikator['point'] ?>"><?= $nilai_sub_indikator['nama_nilai_sub_indikator'] ?></option>
+                                                            <?php endif; ?>
+                                                        <?php endforeach; ?>
+                                                    </select>
+                                                </div>
+                                            <?php endif; ?>
+                                        <?php endforeach; ?>
+                                    </div>
+                                <?php endif; ?>
+                            <?php endforeach; ?>
+                        <?php endforeach; ?>
                         <div class="table-responsive">
                             <table id="myTable" class="table table-striped" style="width:100%">
                                 <thead>
@@ -114,7 +154,7 @@ if ($_SESSION['role'] != 'kelurahan') {
                         </div>
                     </div>
                 </div>
-                <!--Tambah Data-->
+            </section>
         </div>
     </div>
 
@@ -134,12 +174,6 @@ if ($_SESSION['role'] != 'kelurahan') {
                 console.error(error);
             });
     </script>
-    <!-- End Home Page -->
-    </section>
-    <br>
-    </div>
-    </div>
-
 </body>
 
 </html>
