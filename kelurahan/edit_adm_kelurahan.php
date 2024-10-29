@@ -14,6 +14,26 @@ if ($_SESSION['role'] != 'kelurahan') {
     header('Location: unauthorized.php');
     exit;
 }
+
+$id_kelurahan = $_GET['id_kelurahan'];
+$id_periode = $_GET['id_periode'];
+
+$kelurahan = $koneksi->query(
+    "SELECT * FROM kelurahan WHERE id = '$id_kelurahan'"
+);
+$kelurahan = $kelurahan->fetch_assoc();
+
+$periode = $koneksi->query(
+    "SELECT * FROM periode WHERE id = $id_periode"
+);
+$periode = $periode->fetch_assoc();
+
+$administrasi = $koneksi->query(
+    "SELECT * FROM administrasi WHERE id_kelurahan = '$id_kelurahan' AND id_periode = $id_periode"
+);
+
+// var_dump($administrasi);
+// die();
 ?>
 
 <!DOCTYPE html>
@@ -150,18 +170,24 @@ if ($_SESSION['role'] != 'kelurahan') {
                                             <?php if ($indikator['id'] == $sub_indikator['id_indikator']): ?>
                                                 <div class="form-group p-2 m-1">
                                                     <label for="usia_kurang_15"><?= $sub_indikator['nama_sub_indikator'] ?></label>
-                                                    <table style="width: 100%;">
-                                                        <tr>
-                                                            <td>nilai</td>
-                                                            <td>poin :</td>
-                                                            <td>99</td>
-                                                        </tr>
-                                                    </table>
                                                     <select class="form-control" name="role" id="role" required>
                                                         <option value="" selected disabled>-Pilih-</option>
                                                         <?php foreach ($nilai_sub_indikators as $nilai_sub_indikator): ?>
                                                             <?php if ($sub_indikator['id'] == $nilai_sub_indikator['id_sub_indikator']): ?>
-                                                                <option value="<?= $nilai_sub_indikator['point'] ?>"><?= $nilai_sub_indikator['nama_nilai_sub_indikator'] ?></option>
+                                                                <option value="<?= $nilai_sub_indikator['point'] ?>"
+                                                                    <?php
+
+                                                                    $adms = $koneksi->query(
+                                                                        "SELECT * FROM administrasi WHERE id_kelurahan = '$id_kelurahan' AND id_periode = $id_periode"
+                                                                    );
+                                                                    if ($adms) {
+                                                                        foreach ($adms as $adm) {
+                                                                            if ($adm['id_nilai_sub_indikator'] == $nilai_sub_indikator['id']) {
+                                                                                echo 'selected';
+                                                                            }
+                                                                        }
+                                                                    }
+                                                                    ?>><?= $nilai_sub_indikator['nama_nilai_sub_indikator'] ?></option>
                                                             <?php endif; ?>
                                                         <?php endforeach; ?>
                                                     </select>
