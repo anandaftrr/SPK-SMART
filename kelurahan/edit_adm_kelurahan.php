@@ -74,130 +74,94 @@ $administrasi = $koneksi->query(
                 <br>
                 <!-- Page Title -->
                 <div class="pagetitle p-2">
-                    <h1>Data Administrasi</h1>
+                    <h1>Data Administrasi <?= $periode['periode'] ?></h1>
                 </div>
                 <!-- End Page Title -->
                 <!-- Home Page -->
                 <!-- Home Page -->
                 <div class="card">
                     <div class="card-body">
-                        <div class="row">
-                            <div class="col">
-                            </div>
-                            <div class="col-auto">
-                                <div class="form-group">
-                                    <select name="orbitas" id="orbitas" class="form-control" onchange="changeAdministrasiPeriode(this.value)" required>
-                                        <?php
-                                        $user_id = $_SESSION['id_user'];
-
-                                        $result = $koneksi->query(
-                                            "SELECT * FROM users RIGHT JOIN kelurahan ON users.id_kelurahan = kelurahan.id WHERE users.id = $user_id;"
-                                        );
-
-                                        $kelurahan = $result->fetch_assoc();
-
-                                        $periods = $koneksi->query(
-                                            'SELECT * FROM periode ORDER BY id DESC'
-                                        );
-                                        $id_kelurahan = $kelurahan['id'];
-                                        ?>
-                                        <?php foreach ($periods as $periode): ?>
-                                            <?php
-                                            $id_periode = $periode['id'];
-                                            $administrasi = $koneksi->query(
-                                                "SELECT * FROM administrasi WHERE id_kelurahan = '$id_kelurahan' AND id_periode = $id_periode"
-                                            );
-
-                                            if ($administrasi->num_rows == 0) {
-                                                $administrasi = [$id_kelurahan, $id_periode, "-", "-", "-", "-", "-", "-", "-"];
-                                            } else {
-                                                $administrasi = $administrasi->fetch_assoc();
-                                            }
-
-                                            $administrasi = implode(", ", $administrasi);
-
-                                            ?>
-                                            <option value="<?= $administrasi ?>">Periode <?= $periode['periode'] ?> </option>
-                                        <?php endforeach; ?>
-                                    </select>
+                        <form action="" method="post">
+                            <div class="row">
+                                <div class="col">
+                                </div>
+                                <div class="col-auto">
+                                    <div class="form-group">
+                                    </div>
+                                </div>
+                                <div class="col-auto">
+                                    <button type="submit" class="btn btn-primary float-end" data-bs-toggle="modal" data-bs-target="#datawilayahadd">
+                                        Simpan Data
+                                    </button>
                                 </div>
                             </div>
                             <?php
-                            $periods = $koneksi->query(
-                                'SELECT * FROM periode ORDER BY id DESC'
+                            $bidangs = $koneksi->query(
+                                "SELECT * FROM bidang"
                             );
-                            $data = $periods->fetch_assoc();
-
-                            $id_periode = $data['id'];
-
-                            $administrasi_first = $koneksi->query(
-                                "SELECT * FROM administrasi WHERE id_kelurahan = '$id_kelurahan' AND id_periode = $id_periode"
+                            $indikators = $koneksi->query(
+                                "SELECT * FROM indikator"
                             );
-
-                            $administrasi_first = $administrasi_first->fetch_assoc();
-
+                            $sub_indikators = $koneksi->query(
+                                "SELECT * FROM sub_indikator"
+                            );
+                            $nilai_sub_indikators = $koneksi->query(
+                                "SELECT * FROM nilai_sub_indikator"
+                            );
                             ?>
-                            <div class="col-auto">
-                                <a href="/kelurahan/edit_adm_kelurahan.php?id_kelurahan=<?= $id_kelurahan ?>&id_periode=<?= $id_periode ?>" id="buttonEdit">
-                                    <button type="button" class="btn btn-success float-end" data-bs-toggle="modal" data-bs-target="#datawilayahedit">
-                                        <i class="fas fa-solid fa-edit"></i> Edit
-                                    </button>
-                                </a>
-                            </div>
-                        </div>
-                        <?php
-                        $bidangs = $koneksi->query(
-                            "SELECT * FROM bidang"
-                        );
-                        $indikators = $koneksi->query(
-                            "SELECT * FROM indikator"
-                        );
-                        $sub_indikators = $koneksi->query(
-                            "SELECT * FROM sub_indikator"
-                        );
-                        $nilai_sub_indikators = $koneksi->query(
-                            "SELECT * FROM nilai_sub_indikator"
-                        );
-                        ?>
-                        <?php foreach ($bidangs as $bidang): ?>
-                            <h4 class="mt-5" style="font-weight: bold;">Bidang <?= $bidang['nama_bidang'] ?></h4>
-                            <hr style="border: 1px solid black;">
-                            <?php foreach ($indikators as $indikator): ?>
-                                <?php if ($indikator['id_bidang'] == $bidang['id']): ?>
-                                    <div class="border border-secondary rounded m-3 p-2">
-                                        <h5 style="font-weight: bold;">Indikator: <?= $indikator['nama_indikator'] ?></h5>
-                                        <?php foreach ($sub_indikators as $sub_indikator): ?>
-                                            <?php if ($indikator['id'] == $sub_indikator['id_indikator']): ?>
-                                                <div class="form-group p-2 m-1">
-                                                    <label for="usia_kurang_15"><?= $sub_indikator['nama_sub_indikator'] ?></label>
-                                                    <select class="form-control" name="role" id="role" required>
-                                                        <option value="" selected disabled>-Pilih-</option>
-                                                        <?php foreach ($nilai_sub_indikators as $nilai_sub_indikator): ?>
-                                                            <?php if ($sub_indikator['id'] == $nilai_sub_indikator['id_sub_indikator']): ?>
-                                                                <option value="<?= $nilai_sub_indikator['point'] ?>"
-                                                                    <?php
+                            <?php foreach ($bidangs as $bidang): ?>
+                                <div class="mb-5">
+                                    <h4 style="font-weight: bold;">Bidang <?= $bidang['nama_bidang'] ?></h4>
+                                    <hr style="border: 1px solid black;">
+                                    <?php foreach ($indikators as $indikator): ?>
+                                        <?php if ($indikator['id_bidang'] == $bidang['id']): ?>
+                                            <div class="border border-secondary rounded m-3 p-2">
+                                                <h5 style="font-weight: bold;">Indikator: <?= $indikator['nama_indikator'] ?></h5>
+                                                <?php if ($indikator['id'] == '60'): ?>
+                                                    <div class="form-group p-2 m-1">
+                                                        <select class="form-control" name="nilai_sub_indikator_tak_bernilai" id="nilai_sub_indikator_tak_bernilai" required>
+                                                            <option value="" selected disabled>-Pilih-</option>
+                                                            <option value="1">Pertanian</option>
+                                                            <option value="2">Industri</option>
+                                                            <option value="3">Jasa</option>
+                                                        </select>
+                                                    </div>
+                                                <?php else: ?>
+                                                    <?php foreach ($sub_indikators as $sub_indikator): ?>
+                                                        <?php if ($indikator['id'] == $sub_indikator['id_indikator']): ?>
+                                                            <div class="form-group p-2 m-1">
+                                                                <label for="usia_kurang_15"><?= $sub_indikator['nama_sub_indikator'] ?></label>
+                                                                <select class="form-control" name="nilai_sub_indikator" id="nilai_sub_indikator" required>
+                                                                    <option value="" selected disabled>-Pilih-</option>
+                                                                    <?php foreach ($nilai_sub_indikators as $nilai_sub_indikator): ?>
+                                                                        <?php if ($sub_indikator['id'] == $nilai_sub_indikator['id_sub_indikator']): ?>
+                                                                            <option value="<?= $nilai_sub_indikator['point'] ?>"
+                                                                                <?php
 
-                                                                    $adms = $koneksi->query(
-                                                                        "SELECT * FROM administrasi WHERE id_kelurahan = '$id_kelurahan' AND id_periode = $id_periode"
-                                                                    );
-                                                                    if ($adms) {
-                                                                        foreach ($adms as $adm) {
-                                                                            if ($adm['id_nilai_sub_indikator'] == $nilai_sub_indikator['id']) {
-                                                                                echo 'selected';
-                                                                            }
-                                                                        }
-                                                                    }
-                                                                    ?>><?= $nilai_sub_indikator['nama_nilai_sub_indikator'] ?></option>
-                                                            <?php endif; ?>
-                                                        <?php endforeach; ?>
-                                                    </select>
-                                                </div>
-                                            <?php endif; ?>
-                                        <?php endforeach; ?>
-                                    </div>
-                                <?php endif; ?>
+                                                                                $adms = $koneksi->query(
+                                                                                    "SELECT * FROM administrasi WHERE id_kelurahan = '$id_kelurahan' AND id_periode = $id_periode"
+                                                                                );
+                                                                                if ($adms) {
+                                                                                    foreach ($adms as $adm) {
+                                                                                        if ($adm['id_nilai_sub_indikator'] == $nilai_sub_indikator['id']) {
+                                                                                            echo 'selected';
+                                                                                        }
+                                                                                    }
+                                                                                }
+                                                                                ?>><?= $nilai_sub_indikator['nama_nilai_sub_indikator'] ?></option>
+                                                                        <?php endif; ?>
+                                                                    <?php endforeach; ?>
+                                                                </select>
+                                                            </div>
+                                                        <?php endif; ?>
+                                                    <?php endforeach; ?>
+                                                <?php endif; ?>
+                                            </div>
+                                        <?php endif; ?>
+                                    <?php endforeach; ?>
+                                </div>
                             <?php endforeach; ?>
-                        <?php endforeach; ?>
+                        </form>
                     </div>
                 </div>
             </section>
