@@ -14,6 +14,19 @@ if ($_SESSION['role'] != 'kelurahan') {
     header('Location: unauthorized.php');
     exit;
 }
+
+$user_id = $_SESSION['id_user'];
+
+$users = $koneksi->query(
+    "SELECT * FROM users WHERE id = $user_id;"
+)->fetch_assoc();
+
+$id_kelurahan = $users['id_kelurahan'];
+
+$administrasi = $koneksi->query(
+    "SELECT * FROM administrasi WHERE id_kelurahan = '$id_kelurahan';"
+)
+
 ?>
 
 <!DOCTYPE html>
@@ -56,6 +69,16 @@ if ($_SESSION['role'] != 'kelurahan') {
                 <div class="pagetitle p-2">
                     <h1>Data Administrasi</h1>
                 </div>
+                <?php if ((isset($_GET['action'])) && ($_GET['status'] == 'success')): ?>
+                    <div class="alert alert-success alert-dismissible fade show" role="alert">
+                        <strong>Success!</strong> Data administrasi kelurahan berhasil <?= ($_GET['action'] == 'add') ? 'diperbarui' : 'diubah' ?>!
+                    </div>
+                <?php endif; ?>
+                <?php if ((isset($_GET['add'])) && ($_GET['add'] == 'failed')): ?>
+                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                        <strong>Failed!</strong> Data administrasi kelurahan gagal <?= ($_GET['action'] == 'add') ? 'diperbarui' : 'diubah' ?>!
+                    </div>
+                <?php endif; ?>
                 <!-- End Page Title -->
                 <!-- Home Page -->
                 <!-- Home Page -->
@@ -85,19 +108,27 @@ if ($_SESSION['role'] != 'kelurahan') {
                                             <?php
                                             $id_periode = $periode['id'];
                                             $administrasi = $koneksi->query(
-                                                "SELECT * FROM administrasi WHERE id_kelurahan = '$id_kelurahan' AND id_periode = $id_periode"
+                                                "SELECT * FROM administrasi, nilai_sub_indikator WHERE administrasi.id_kelurahan = '$id_kelurahan' AND administrasi.id_periode = $id_periode AND administrasi.id_nilai_sub_indikator = nilai_sub_indikator.id"
                                             );
-
+                                            $val_administrasi = [$id_kelurahan, $id_periode];
                                             if ($administrasi->num_rows == 0) {
-                                                $administrasi = [$id_kelurahan, $id_periode, "-", "-", "-", "-", "-", "-", "-"];
+                                                // $val_administrasi = [$id_kelurahan, $id_periode, "-", "-", "-", "-", "-", "-", "-"];
+                                                for ($i = 0; $i < 179; $i++) {
+                                                    $val_administrasi[] = "-";
+                                                    $val_administrasi[] = "-";
+                                                }
                                             } else {
-                                                $administrasi = $administrasi->fetch_assoc();
+                                                // $administrasi = $administrasi->fetch_assoc();
+                                                foreach ($administrasi as $administrasi_satu) {
+                                                    $val_administrasi[] = $administrasi_satu['nama_nilai_sub_indikator'];
+                                                    $val_administrasi[] = $administrasi_satu['point'];
+                                                }
                                             }
 
-                                            $administrasi = implode(", ", $administrasi);
+                                            $val_administrasi = implode("| ", $val_administrasi);
 
                                             ?>
-                                            <option value="<?= $administrasi ?>">Periode <?= $periode['periode'] ?> </option>
+                                            <option value="<?= $val_administrasi ?>">Periode <?= $periode['periode'] ?> </option>
                                         <?php endforeach; ?>
                                     </select>
                                 </div>
@@ -113,8 +144,6 @@ if ($_SESSION['role'] != 'kelurahan') {
                             $administrasi_first = $koneksi->query(
                                 "SELECT * FROM administrasi WHERE id_kelurahan = '$id_kelurahan' AND id_periode = $id_periode"
                             );
-
-                            $administrasi_first = $administrasi_first->fetch_assoc();
 
                             ?>
                             <div class="col-auto">
@@ -138,7 +167,9 @@ if ($_SESSION['role'] != 'kelurahan') {
                         $nilai_sub_indikators = $koneksi->query(
                             "SELECT * FROM nilai_sub_indikator"
                         );
+                        $i = 1;
                         ?>
+
                         <?php foreach ($bidangs as $bidang): ?>
                             <h4 class="mt-5" style="font-weight: bold;">Bidang <?= $bidang['nama_bidang'] ?></h4>
                             <hr style="border: 1px solid black;">
@@ -146,28 +177,76 @@ if ($_SESSION['role'] != 'kelurahan') {
                                 <?php if ($indikator['id_bidang'] == $bidang['id']): ?>
                                     <div class="border border-secondary rounded m-3 p-2">
                                         <h5 style="font-weight: bold;">Indikator: <?= $indikator['nama_indikator'] ?></h5>
-                                        <?php foreach ($sub_indikators as $sub_indikator): ?>
-                                            <?php if ($indikator['id'] == $sub_indikator['id_indikator']): ?>
+                                        <?php if ($indikator['id'] == '60'): ?>
+                                            <?php if ($administrasi_first->num_rows == 0): ?>
                                                 <div class="form-group p-2 m-1">
-                                                    <label for="usia_kurang_15"><?= $sub_indikator['nama_sub_indikator'] ?></label>
                                                     <table style="width: 100%;">
                                                         <tr>
-                                                            <td>nilai</td>
-                                                            <td>poin :</td>
-                                                            <td>99</td>
+                                                            <td style="width: 50%;"><span id="nilai<?= $i ?>">-</span></td>
                                                         </tr>
                                                     </table>
-                                                    <select class="form-control" name="role" id="role" required>
-                                                        <option value="" selected disabled>-Pilih-</option>
-                                                        <?php foreach ($nilai_sub_indikators as $nilai_sub_indikator): ?>
-                                                            <?php if ($sub_indikator['id'] == $nilai_sub_indikator['id_sub_indikator']): ?>
-                                                                <option value="<?= $nilai_sub_indikator['point'] ?>"><?= $nilai_sub_indikator['nama_nilai_sub_indikator'] ?></option>
-                                                            <?php endif; ?>
-                                                        <?php endforeach; ?>
-                                                    </select>
                                                 </div>
+                                            <?php else: ?>
+                                                <?php
+
+                                                $adm_tak_bernilai = $koneksi->query(
+                                                    "SELECT * FROM administrasi WHERE id_kelurahan = '$id_kelurahan' AND id_periode = '$id_periode' AND tak_bernilai = '1'"
+                                                )->fetch_assoc();
+
+                                                if ($adm_tak_bernilai['id_nilai_sub_indikator'] == '372') {
+                                                    $pencaharian = 'Pertanian';
+                                                } elseif ($adm_tak_bernilai['id_nilai_sub_indikator'] == '373') {
+                                                    $pencaharian = 'Industri';
+                                                } elseif ($adm_tak_bernilai['id_nilai_sub_indikator'] == '374') {
+                                                    $pencaharian = 'Jasa';
+                                                }
+
+                                                echo '<div class="form-group p-2 m-1"><table style="width: 100%;"><tr><td style="width: 50%;"><span id="nilai' . $i . '">' . $pencaharian . '</span></td></tr></table></div>';
+
+                                                ?>
                                             <?php endif; ?>
-                                        <?php endforeach; ?>
+                                        <?php else: ?>
+                                            <?php foreach ($sub_indikators as $sub_indikator): ?>
+                                                <?php if ($indikator['id'] == $sub_indikator['id_indikator']): ?>
+                                                    <div class="form-group p-2 m-1">
+                                                        <label for="usia_kurang_15"><?= $sub_indikator['nama_sub_indikator'] ?></label>
+                                                        <?php if ($administrasi_first->num_rows == 0): ?>
+                                                            <table style="width: 100%;">
+                                                                <tr>
+                                                                    <td style="width: 50%;"><span id="nilai<?= ($i == 171) ? $i + 1 : $i ?>">-</span></td>
+                                                                    <td style="width: 50%;">Poin : <span id="poin<?= ($i == 171) ? $i + 1 : $i ?>">-</span></td>
+                                                                </tr>
+                                                            </table>
+                                                        <?php else: ?>
+                                                            <?php foreach ($nilai_sub_indikators as $nilai_sub_indikator): ?>
+                                                                <?php if ($sub_indikator['id'] == $nilai_sub_indikator['id_sub_indikator']): ?>
+                                                                    <?php
+
+                                                                    $adms = $koneksi->query(
+                                                                        "SELECT * FROM administrasi WHERE id_kelurahan = '$id_kelurahan' AND id_periode = $id_periode"
+                                                                    );
+                                                                    if ($adms) {
+                                                                        foreach ($adms as $adm) {
+                                                                            if ($adm['id_nilai_sub_indikator'] == $nilai_sub_indikator['id']) {
+                                                                                echo '<table style="width: 100%;"><tr><td style="width: 50%;"><span id="nilai' . (($i == 171) ? $i + 1 : $i) . '">' . $nilai_sub_indikator['nama_nilai_sub_indikator'] . '</span></td><td style="width: 50%;">Poin : <span id="poin' . (($i == 171) ? $i + 1 : $i) . '">' . $nilai_sub_indikator['point'] . '</span></td></tr></table>';
+                                                                            }
+                                                                        }
+                                                                    }
+                                                                    ?>
+                                                                <?php endif; ?>
+                                                            <?php endforeach; ?>
+                                                        <?php endif; ?>
+                                                    </div>
+                                                    <?php
+                                                    if ($i == 171) {
+                                                        $i += 2;
+                                                    } else {
+                                                        $i++;
+                                                    }
+                                                    ?>
+                                                <?php endif; ?>
+                                            <?php endforeach; ?>
+                                        <?php endif; ?>
                                     </div>
                                 <?php endif; ?>
                             <?php endforeach; ?>
@@ -196,21 +275,32 @@ if ($_SESSION['role'] != 'kelurahan') {
     </script>
 
     <script>
-        function changeAdministrasiPeriode(kelurahan_periode = null) {
+        function changeAdministrasiPeriode(administrasi = null) {
             // console.log(kelurahan_periode);
-            let resultArray = kelurahan_periode.split(", ");
+            let resultArray = administrasi.split("| ");
+
+            <?php
+
+            for ($i = 1; $i <= 179; $i++) {
+                echo 'document.getElementById("nilai' . $i . '").textContent = resultArray[' . ($i * 2) . '];';
+                if ($i != 171) {
+                    echo 'document.getElementById("poin' . $i . '").textContent = resultArray[' . (($i * 2) + 1) . '];';
+                }
+            }
+
+            ?>
 
             // Output the resulting array
-            console.log(resultArray[6]);
-            document.getElementById("usia_kurang_15").textContent = resultArray[2];
-            document.getElementById("usia_15_56").textContent = resultArray[3];
-            document.getElementById("usia_lebih_56").textContent = resultArray[4];
-            document.getElementById("penduduk_total").textContent = resultArray[5];
-            document.getElementById("penduduk_laki_laki").textContent = resultArray[6];
-            document.getElementById("penduduk_perempuan").textContent = resultArray[7];
-            document.getElementById("jumlah_kepala_keluarga").textContent = resultArray[8];
+            // console.log(resultArray[6]);
+            // document.getElementById("usia_kurang_15").textContent = resultArray[2];
+            // document.getElementById("usia_15_56").textContent = resultArray[3];
+            // document.getElementById("usia_lebih_56").textContent = resultArray[4];
+            // document.getElementById("penduduk_total").textContent = resultArray[5];
+            // document.getElementById("penduduk_laki_laki").textContent = resultArray[6];
+            // document.getElementById("penduduk_perempuan").textContent = resultArray[7];
+            // document.getElementById("jumlah_kepala_keluarga").textContent = resultArray[8];
 
-            document.getElementById("buttonEdit").setAttribute("href", "/kelurahan/edit_kelurahan_periode.php?id_kelurahan=" + resultArray[0] + "&id_periode=" + resultArray[1]);
+            document.getElementById("buttonEdit").setAttribute("href", "/kelurahan/edit_adm_kelurahan.php?id_kelurahan=" + resultArray[0] + "&id_periode=" + resultArray[1]);
         }
     </script>
 </body>

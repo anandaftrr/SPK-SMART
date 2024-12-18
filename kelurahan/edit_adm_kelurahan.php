@@ -17,6 +17,34 @@ if ($_SESSION['role'] != 'kelurahan') {
 
 $id_kelurahan = $_GET['id_kelurahan'];
 $id_periode = $_GET['id_periode'];
+$administrasi = $koneksi->query(
+    "SELECT * FROM administrasi WHERE id_kelurahan = '$id_kelurahan' AND id_periode = $id_periode"
+);
+
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    if ($administrasi->num_rows != 0) {
+        $delete = $koneksi->query(
+            "DELETE FROM administrasi WHERE id_kelurahan = '$id_kelurahan' AND id_periode = $id_periode"
+        );
+    }
+    foreach ($_POST as $key => $value) {
+        $id_nilai_sub_indikator = htmlspecialchars($value);
+        if ($id_nilai_sub_indikator == '372' || $id_nilai_sub_indikator == '373' || $id_nilai_sub_indikator == '374') {
+            $insert = $koneksi->query(
+                "INSERT INTO administrasi (id_kelurahan, id_periode, id_nilai_sub_indikator, tak_bernilai) VALUES ('$id_kelurahan', $id_periode, $id_nilai_sub_indikator, '1')"
+            );
+        } else {
+            $insert = $koneksi->query(
+                "INSERT INTO administrasi (id_kelurahan, id_periode, id_nilai_sub_indikator) VALUES ('$id_kelurahan', $id_periode, $id_nilai_sub_indikator)"
+            );
+        }
+    }
+    if ($insert) {
+        header('Location: /kelurahan/dataadm.php?action=add&status=success');
+    } else {
+        header('Location: /kelurahan/dataadm.php?action=add&status=failed');
+    }
+}
 
 $kelurahan = $koneksi->query(
     "SELECT * FROM kelurahan WHERE id = '$id_kelurahan'"
@@ -28,12 +56,6 @@ $periode = $koneksi->query(
 );
 $periode = $periode->fetch_assoc();
 
-$administrasi = $koneksi->query(
-    "SELECT * FROM administrasi WHERE id_kelurahan = '$id_kelurahan' AND id_periode = $id_periode"
-);
-
-// var_dump($administrasi);
-// die();
 ?>
 
 <!DOCTYPE html>
@@ -119,11 +141,24 @@ $administrasi = $koneksi->query(
                                                 <h5 style="font-weight: bold;">Indikator: <?= $indikator['nama_indikator'] ?></h5>
                                                 <?php if ($indikator['id'] == '60'): ?>
                                                     <div class="form-group p-2 m-1">
-                                                        <select class="form-control" name="nilai_sub_indikator_tak_bernilai" id="nilai_sub_indikator_tak_bernilai" required>
+                                                        <select class="form-control" name="nilai_sub_indikator_tak_bernilai" id="nilai_sub_indikator_tak_bernilai">
                                                             <option value="" selected disabled>-Pilih-</option>
-                                                            <option value="1">Pertanian</option>
-                                                            <option value="2">Industri</option>
-                                                            <option value="3">Jasa</option>
+                                                            <?php
+
+                                                            $adm_tak_bernilai = $koneksi->query(
+                                                                "SELECT * FROM administrasi WHERE id_kelurahan = '$id_kelurahan' AND id_periode = '$id_periode' AND tak_bernilai = '1'"
+                                                            )->fetch_assoc();
+
+                                                            ?>
+                                                            <?php if ($adm_tak_bernilai == ''): ?>
+                                                                <option value="372">Pertanian</option>
+                                                                <option value="373">Industri</option>
+                                                                <option value="374">Jasa</option>
+                                                            <?php else: ?>
+                                                                <option value="372" <?= ($adm_tak_bernilai['id_nilai_sub_indikator'] == '372') ? 'selected' : '' ?>>Pertanian</option>
+                                                                <option value="373" <?= ($adm_tak_bernilai['id_nilai_sub_indikator'] == '373') ? 'selected' : '' ?>>Industri</option>
+                                                                <option value="374" <?= ($adm_tak_bernilai['id_nilai_sub_indikator'] == '374') ? 'selected' : '' ?>>Jasa</option>
+                                                            <?php endif; ?>
                                                         </select>
                                                     </div>
                                                 <?php else: ?>
@@ -131,11 +166,11 @@ $administrasi = $koneksi->query(
                                                         <?php if ($indikator['id'] == $sub_indikator['id_indikator']): ?>
                                                             <div class="form-group p-2 m-1">
                                                                 <label for="usia_kurang_15"><?= $sub_indikator['nama_sub_indikator'] ?></label>
-                                                                <select class="form-control" name="nilai_sub_indikator" id="nilai_sub_indikator" required>
+                                                                <select class="form-control" name="nilai_sub_indikator<?= $sub_indikator['id'] ?>" id="nilai_sub_indikator<?= $sub_indikator['id'] ?>">
                                                                     <option value="" selected disabled>-Pilih-</option>
                                                                     <?php foreach ($nilai_sub_indikators as $nilai_sub_indikator): ?>
                                                                         <?php if ($sub_indikator['id'] == $nilai_sub_indikator['id_sub_indikator']): ?>
-                                                                            <option value="<?= $nilai_sub_indikator['point'] ?>"
+                                                                            <option value="<?= $nilai_sub_indikator['id'] ?>"
                                                                                 <?php
 
                                                                                 $adms = $koneksi->query(

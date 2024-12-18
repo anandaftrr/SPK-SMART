@@ -55,7 +55,7 @@ if ($_SESSION['role'] != 'kelurahan') {
                 <br>
                 <!-- Page Title -->
                 <div class="pagetitle p-2">
-                    <h1>Hasi Administrasi</h1>
+                    <h1>Hasil Administrasi</h1>
                 </div>
                 <!-- End Page Title -->
                 <!-- Home Page -->
@@ -64,11 +64,71 @@ if ($_SESSION['role'] != 'kelurahan') {
                     <div class="col-md-6">
                         <div class="card mt-3">
                             <div class="card-body">
+                                <div class="row">
+                                    <div class="col">
+                                    </div>
+                                    <div class="col-auto">
+                                        <div class="form-group">
+                                            <select name="orbitas" id="orbitas" class="form-control" onchange="changeAdministrasiPeriode(this.value)" required>
+                                                <?php
+                                                $user_id = $_SESSION['id_user'];
+
+                                                $result = $koneksi->query(
+                                                    "SELECT * FROM users RIGHT JOIN kelurahan ON users.id_kelurahan = kelurahan.id WHERE users.id = $user_id;"
+                                                );
+
+                                                $kelurahan = $result->fetch_assoc();
+
+                                                $periods = $koneksi->query(
+                                                    'SELECT * FROM periode ORDER BY id DESC'
+                                                );
+                                                $id_kelurahan = $kelurahan['id'];
+                                                ?>
+                                                <?php foreach ($periods as $periode): ?>
+                                                    <?php
+                                                    $id_periode = $periode['id'];
+                                                    $administrasi = $koneksi->query(
+                                                        "SELECT SUM(nilai_sub_indikator.point) AS total_nilai_akhir FROM administrasi, nilai_sub_indikator WHERE administrasi.id_kelurahan = '$id_kelurahan' AND administrasi.id_periode = $id_periode AND administrasi.id_nilai_sub_indikator = nilai_sub_indikator.id"
+                                                    );
+                                                    $administrasi = $administrasi->fetch_assoc();
+
+                                                    $val_administrasi = [$id_kelurahan, $id_periode];
+                                                    if ($administrasi['total_nilai_akhir'] == null) {
+                                                        $val_administrasi[] = "Periode " . $periode['periode'];
+                                                        $val_administrasi[] = "-";
+                                                    } else {
+                                                        $val_administrasi[] = "Periode " . $periode['periode'];
+                                                        $val_administrasi[] = $administrasi['total_nilai_akhir'];
+                                                    }
+
+                                                    $val_administrasi = implode("| ", $val_administrasi);
+
+                                                    ?>
+                                                    <option value="<?= $val_administrasi ?>">Periode <?= $periode['periode'] ?> </option>
+                                                <?php endforeach; ?>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <?php
+                                    $periods = $koneksi->query(
+                                        'SELECT * FROM periode ORDER BY id DESC'
+                                    );
+                                    $data = $periods->fetch_assoc();
+
+                                    $id_periode = $data['id'];
+
+                                    $administrasi_first = $koneksi->query(
+                                        "SELECT SUM(nilai_sub_indikator.point) AS total_nilai_akhir FROM administrasi, nilai_sub_indikator WHERE administrasi.id_kelurahan = '$id_kelurahan' AND administrasi.id_periode = $id_periode AND administrasi.id_nilai_sub_indikator = nilai_sub_indikator.id"
+                                    );
+                                    $administrasi_first = $administrasi_first->fetch_assoc();
+
+                                    ?>
+                                </div>
                                 <center>
-                                    <h4>Total Nilai Akhir</h4>
+                                    <h4>Total Nilai Akhir <span id="periode">Periode <?= $data['periode'] ?></span></h4>
                                 </center>
                                 <center>
-                                    <h1 class="pagetitle p-2">188</h1>
+                                    <h1 id="total_nilai_akhir" class="pagetitle p-2"><?= $administrasi_first['total_nilai_akhir'] ? $administrasi_first['total_nilai_akhir'] : '-' ?></h1>
                                 </center>
                                 <center>
                                     <h4>
@@ -85,6 +145,14 @@ if ($_SESSION['role'] != 'kelurahan') {
             <br>
         </div>
     </div>
+    <script>
+        function changeAdministrasiPeriode(administrasi = null) {
+            let resultArray = administrasi.split("| ");
+
+            document.getElementById("periode").textContent = resultArray[2];
+            document.getElementById("total_nilai_akhir").textContent = resultArray[3];
+        }
+    </script>
 
 </body>
 
