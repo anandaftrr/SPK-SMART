@@ -1,6 +1,8 @@
 <?php
 session_start();
-include 'koneksi.php';
+include '../koneksi.php';
+
+$id_periode = $_GET['id_periode'];
 
 // Periksa apakah pengguna sudah login
 if (!isset($_SESSION['id_user']) || empty($_SESSION['id_user'])) {
@@ -47,57 +49,26 @@ if ($_SESSION['role'] != 'pimpinan') {
 
 <body class="hold-transition sidebar-mini">
     <div class="wrapper">
-        <?php include 'header.php'; ?>
-        <?php include 'pimpinan_sidebar.php'; ?>
+        <?php include '../layouts/header.php'; ?>
+        <?php include '../layouts/pimpinan_sidebar_proses.php'; ?>
         <div class="content-wrapper">
             <section class="content">
-            <br>
-            <!-- Page Title -->
-            <div class="pagetitle">
-                <h1>Dashboard</h1>
-            </div>
-            <!-- End Page Title -->
-            <!-- Home Page -->
                 <br>
-                <div class="container-fluid">
-                <div class="row">
-                        <div class="col-12 col-md-6 d-flex">
-                            <div class="card flex-fill border-0 illustration">
-                                <div class="card-body p-0 d-flex flex-fill">
-                                    <div class="row g-0 w-100">
-                                        <div class="">
-                                            <div class="p-3 m-1">
-                                                <h4>Selamat Datang, Pimpinan!</h4>
-                                                <p>Sistem Pendukung Keputusan Pemilihan Kelurahan Terbaik Tingkat Kota Padang dengan Metode SMART</p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-12 col-md-6 d-flex">
-                            <div class="card flex-fill border-0">
-                                <div class="card-body py-4">
-                                    <div class="d-flex align-items-start">
-                                        <div class="flex-grow-1">
-                                            <h4 class="mb-2">
-                                                Metode SMART
-                                            </h4>
-                                            <div class="mb-0">
-                                            <p>SMART (Simple Multi Attribute Rating Technique) merupakan metode pengambilan keputusan yang multi-atribut. Teknik pembuatan keputusan multi-atribut ini digunakan untuk mendukung pembuat keputusan dalam memilih antara beberapa alternatif.</p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                <!-- Page Title -->
+                <?php
+                $periode = $koneksi->query(
+                    "SELECT * FROM periode WHERE id = $id_periode;"
+                );
+
+                $periode = $periode->fetch_assoc();
+                ?>
+                <div class="pagetitle p-2">
+                    <h1>Hasil Administrasi Periode <?= $periode ? $periode['periode'] : '-' ?></h1>
                 </div>
-            <!-- End Home Page -->
+                <!-- End Page Title -->
             </section>
-            <br>
         </div>
     </div>
-    
 </body>
 
 </html>

@@ -36,7 +36,7 @@ if ($result->num_rows == 1) {
                 header('Location: /admin/dashboard.php');
                 break;
             case 'pimpinan':
-                header('Location: pimpinan_dashboard.php');
+                header('Location: /pimpinan/pimpinan_dashboard.php');
                 break;
             case 'penilai':
                 header('Location: penilai_dashboard.php');
