@@ -100,7 +100,6 @@ if ($_SESSION['role'] != 'pimpinan') {
                             </div>
                         </div>
                     </div>
-                    <!--Tambah Data-->
                 </div>
             </section>
         </div>

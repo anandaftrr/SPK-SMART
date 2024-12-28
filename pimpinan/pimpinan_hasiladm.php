@@ -66,6 +66,50 @@ if ($_SESSION['role'] != 'pimpinan') {
                     <h1>Hasil Administrasi Periode <?= $periode ? $periode['periode'] : '-' ?></h1>
                 </div>
                 <!-- End Page Title -->
+                <div class="table-responsive">
+                    <div class="card mt-3">
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table id="myTable" class="table table-striped" style="width:100%">
+                                    <thead>
+                                        <tr>
+                                            <th style="text-align: center;">Rangking</th>
+                                            <th style="text-align: center;">ID Kelurahan</th>
+                                            <th style="text-align: center;">Nama Kelurahan</th>
+                                            <th style="text-align: center;">Total Nilai Akhir</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <?php
+                                        $kelurahan = $koneksi->query(
+                                            'SELECT id_kelurahan FROM administrasi WHERE id_periode = 3 GROUP BY id_kelurahan;'
+                                        );
+                                        $no = 1;
+                                        ?>
+                                        <?php foreach ($periods as $periode): ?>
+                                            <tr align="center">
+                                                <td><?= $no ?></td>
+                                                <td>
+                                                    <?= $periode['periode'] ?>
+                                                </td>
+                                                <td>
+                                                    <a href="/pimpinan/pimpinan_hasiladm.php?id_periode=<?= $periode['id'] ?>">
+                                                        <button type="button" class="btn btn-info btn-sm">
+                                                            <i class="fa fa-search" aria-hidden="true"></i>
+                                                        </button>
+                                                    </a>
+                                                </td>
+                                            </tr>
+                                        <?php
+                                            $no++;
+                                        endforeach;
+                                        ?>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </section>
         </div>
     </div>
