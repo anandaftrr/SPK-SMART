@@ -15,6 +15,22 @@ if ($_SESSION['role'] != 'admin') {
     exit;
 }
 
+if ((isset($_GET['tutup_adm'])) && ($_GET['tutup_adm'] == true)) {
+    $id_periode = $_GET['id_periode'];
+    $update = $koneksi->query(
+        "UPDATE periode SET tutup_periode_administrasi = '1' WHERE id = $id_periode"
+    );
+    $periode = $koneksi->query(
+        "SELECT * FROM periode WHERE id = '$id_periode'"
+    )->fetch_assoc();
+    $nama_periode = $periode['periode'];
+    if ($update) {
+        $success = 'Periode adimistrasi ' . $nama_periode . ' telah ditutup!';
+    } else {
+        $failed = 'Periode adimistrasi ' . $nama_periode . ' gagal ditutup!';
+    }
+}
+
 if ((isset($_GET['action'])) && ($_GET['action'] == 'add')) {
     $periode = $_POST['periode'];
 
@@ -110,6 +126,7 @@ if ((isset($_GET['action'])) && ($_GET['action'] == 'delete')) {
                                     <thead>
                                         <tr>
                                             <th style="text-align: center;">Periode</th>
+                                            <th style="text-align: center;">Periode Administrasi</th>
                                             <th style="text-align: center;">Aksi</th>
                                         </tr>
                                     </thead>
@@ -123,6 +140,15 @@ if ((isset($_GET['action'])) && ($_GET['action'] == 'delete')) {
                                             <tr align="center">
                                                 <td>
                                                     <?= $periode['periode'] ?>
+                                                </td>
+                                                <td>
+                                                    <?php if ($periode['tutup_periode_administrasi'] == '0'): ?>
+                                                        <a href="#" class="btn-close-period" data-id-periode="<?= $periode['id'] ?>" data-nama-periode="<?= $periode['periode'] ?>">
+                                                            Dibuka
+                                                        </a>
+                                                    <?php else: ?>
+                                                        Ditutup
+                                                    <?php endif; ?>
                                                 </td>
                                                 <td>
                                                     <button type="button" class="btn btn-danger btn-sm" onclick="hapusPeriode('<?= $periode['id']; ?>','<?= $periode['periode']; ?>')">
@@ -209,6 +235,32 @@ if ((isset($_GET['action'])) && ($_GET['action'] == 'delete')) {
                 }
             })
         }
+    </script>
+    <script>
+        // Event listener untuk semua elemen dengan class "btn-close-period"
+        document.querySelectorAll('.btn-close-period').forEach(function(button) {
+            button.addEventListener('click', function(event) {
+                event.preventDefault(); // Mencegah aksi default dari tag <a>
+
+                const idPeriode = this.getAttribute('data-id-periode'); // Ambil data id_periode
+                const namaPeriode = this.getAttribute('data-nama-periode'); // Ambil data id_periode
+
+                // SweetAlert konfirmasi
+                Swal.fire({
+                    title: 'Konfirmasi',
+                    text: `Apakah Anda yakin ingin menutup periode administrasi ${namaPeriode}?`,
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonText: 'Ya, Tutup!',
+                    cancelButtonText: 'Batal'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        // Redirect ke halaman dengan membawa parameter id_periode
+                        window.location.href = `?tutup_adm=true&id_periode=${idPeriode}`;
+                    }
+                });
+            });
+        });
     </script>
 </body>
 

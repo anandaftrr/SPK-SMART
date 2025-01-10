@@ -23,7 +23,13 @@
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a href="admin_kelolaalternatif.php" class="nav-link">
+                    <a href="/admin/adm/hasil_adm.php" class="nav-link">
+                        <i class="nav-icon fas fa-solid fa-list-ol" style="color: #fcfcfc;"></i>
+                        <p style="color: #fcfcfc;"> Hasil Data Administrasi</p>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="/admin/alternatif/data_alternatif.php" class="nav-link">
                         <i class="nav-icon fas fa-user" style="color: #fcfcfc;"></i>
                         <p style="color: #fcfcfc;"> Kelola Alternatif </p>
                     </a>
@@ -32,12 +38,6 @@
                     <a href="admin_kelolakriteria.php" class="nav-link">
                         <i class="nav-icon fas fa-solid fa-chart-pie" style="color: #fcfcfc;"></i>
                         <p style="color: #fcfcfc;"> Kelola Kriteria </p>
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a href="admin_seleksiadm.php" class="nav-link">
-                        <i class="nav-icon fas fa-solid fa-list-ol" style="color: #fcfcfc;"></i>
-                        <p style="color: #fcfcfc;"> Hasil Data Administrasi</p>
                     </a>
                 </li>
                 <li class="nav-item">
