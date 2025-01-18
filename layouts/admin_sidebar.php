@@ -35,7 +35,7 @@
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a href="admin_kelolakriteria.php" class="nav-link">
+                    <a href="/admin/kriteria/data_kriteria.php" class="nav-link">
                         <i class="nav-icon fas fa-solid fa-chart-pie" style="color: #fcfcfc;"></i>
                         <p style="color: #fcfcfc;"> Kelola Kriteria </p>
                     </a>

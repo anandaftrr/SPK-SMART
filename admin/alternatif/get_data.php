@@ -11,14 +11,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     // Query dengan prepared statement
     $query = $koneksi->prepare(
-        'SELECT kelurahan.kelurahan, 
-                SUM(nilai_sub_indikator.point) AS total_nilai_akhir 
-         FROM administrasi 
-         JOIN nilai_sub_indikator ON administrasi.id_nilai_sub_indikator = nilai_sub_indikator.id 
-         JOIN kelurahan ON administrasi.id_kelurahan = kelurahan.id 
-         WHERE administrasi.id_periode = ? 
-         GROUP BY administrasi.id_kelurahan, kelurahan.kelurahan 
-         ORDER BY total_nilai_akhir DESC'
+        'SELECT alternatif.*, kelurahan.kelurahan FROM alternatif JOIN kelurahan ON alternatif.id_kelurahan = kelurahan.id WHERE alternatif.id_periode = ? ORDER BY kelurahan.kelurahan ASC'
     );
 
     // Eksekusi query
@@ -31,7 +24,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $i = 0;
     while ($row = $result->fetch_assoc()) {
         $data[] = $row;
-        $data[$i]['ranking'] = $i + 1;
+        $data[$i]['no'] = $i + 1;
         $i++;
     }
 

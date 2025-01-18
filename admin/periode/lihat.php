@@ -20,6 +20,15 @@ if ((isset($_GET['tutup_adm'])) && ($_GET['tutup_adm'] == true)) {
     $update = $koneksi->query(
         "UPDATE periode SET tutup_periode_administrasi = '1' WHERE id = $id_periode"
     );
+    $adms = $koneksi->query(
+        "SELECT kelurahan.id, kelurahan.kelurahan, SUM(nilai_sub_indikator.point) AS total_nilai_akhir FROM administrasi JOIN nilai_sub_indikator ON administrasi.id_nilai_sub_indikator = nilai_sub_indikator.id JOIN kelurahan ON administrasi.id_kelurahan = kelurahan.id WHERE administrasi.id_periode = $id_periode GROUP BY administrasi.id_kelurahan, kelurahan.kelurahan ORDER BY total_nilai_akhir DESC;"
+    );
+    foreach ($adms as $adm) {
+        $id_kelurahan = $adm['id'];
+        $insert = $koneksi->query(
+            "INSERT INTO alternatif (id_periode, id_kelurahan) VALUES ($id_periode, '$id_kelurahan')"
+        );
+    }
     $periode = $koneksi->query(
         "SELECT * FROM periode WHERE id = '$id_periode'"
     )->fetch_assoc();
@@ -125,27 +134,44 @@ if ((isset($_GET['action'])) && ($_GET['action'] == 'delete')) {
                                 <table id="myTable" class="table table-striped" style="width:100%">
                                     <thead>
                                         <tr>
+                                            <th style="text-align: center;">No</th>
                                             <th style="text-align: center;">Periode</th>
                                             <th style="text-align: center;">Periode Administrasi</th>
+                                            <th style="text-align: center;">Status Periode</th>
                                             <th style="text-align: center;">Aksi</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         <?php
                                         $periods = $koneksi->query(
-                                            'SELECT * FROM periode ORDER BY periode ASC'
+                                            'SELECT * FROM periode ORDER BY periode DESC'
                                         );
+                                        $no = 1;
                                         ?>
                                         <?php foreach ($periods as $periode): ?>
                                             <tr align="center">
+                                                <td><?= $no ?></td>
                                                 <td>
                                                     <?= $periode['periode'] ?>
                                                 </td>
                                                 <td>
                                                     <?php if ($periode['tutup_periode_administrasi'] == '0'): ?>
-                                                        <a href="#" class="btn-close-period" data-id-periode="<?= $periode['id'] ?>" data-nama-periode="<?= $periode['periode'] ?>">
+                                                        <a href="#" class="btn-close-period-adm" data-id-periode="<?= $periode['id'] ?>" data-nama-periode="<?= $periode['periode'] ?>">
                                                             Dibuka
                                                         </a>
+                                                    <?php else: ?>
+                                                        Ditutup
+                                                    <?php endif; ?>
+                                                </td>
+                                                <td>
+                                                    <?php if ($periode['tutup_periode'] == '0'): ?>
+                                                        <?php if ($periode['tutup_periode_administrasi'] == '1'): ?>
+                                                            <a href="#" class="btn-close-period" data-id-periode="<?= $periode['id'] ?>" data-nama-periode="<?= $periode['periode'] ?>">
+                                                                Dibuka
+                                                            </a>
+                                                        <?php else: ?>
+                                                            Dibuka
+                                                        <?php endif; ?>
                                                     <?php else: ?>
                                                         Ditutup
                                                     <?php endif; ?>
@@ -156,6 +182,7 @@ if ((isset($_GET['action'])) && ($_GET['action'] == 'delete')) {
                                                     </button>
                                                 </td>
                                             </tr>
+                                            <?php $no++; ?>
                                         <?php endforeach; ?>
                                     </tbody>
                                 </table>
@@ -237,8 +264,8 @@ if ((isset($_GET['action'])) && ($_GET['action'] == 'delete')) {
         }
     </script>
     <script>
-        // Event listener untuk semua elemen dengan class "btn-close-period"
-        document.querySelectorAll('.btn-close-period').forEach(function(button) {
+        // Event listener untuk semua elemen dengan class "btn-close-period-adm"
+        document.querySelectorAll('.btn-close-period-adm').forEach(function(button) {
             button.addEventListener('click', function(event) {
                 event.preventDefault(); // Mencegah aksi default dari tag <a>
 
@@ -257,6 +284,30 @@ if ((isset($_GET['action'])) && ($_GET['action'] == 'delete')) {
                     if (result.isConfirmed) {
                         // Redirect ke halaman dengan membawa parameter id_periode
                         window.location.href = `?tutup_adm=true&id_periode=${idPeriode}`;
+                    }
+                });
+            });
+        });
+        // Event listener untuk semua elemen dengan class "btn-close-period"
+        document.querySelectorAll('.btn-close-period').forEach(function(button) {
+            button.addEventListener('click', function(event) {
+                event.preventDefault(); // Mencegah aksi default dari tag <a>
+
+                const idPeriode = this.getAttribute('data-id-periode'); // Ambil data id_periode
+                const namaPeriode = this.getAttribute('data-nama-periode'); // Ambil data id_periode
+
+                // SweetAlert konfirmasi
+                Swal.fire({
+                    title: 'Konfirmasi',
+                    text: `Apakah Anda yakin ingin menutup periode ${namaPeriode}?`,
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonText: 'Ya, Tutup!',
+                    cancelButtonText: 'Batal'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        // Redirect ke halaman dengan membawa parameter id_periode
+                        window.location.href = `?tutup_periode=true&id_periode=${idPeriode}`;
                     }
                 });
             });

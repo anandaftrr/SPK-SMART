@@ -81,27 +81,35 @@ if ($_SESSION['role'] != 'admin') {
                                     </div>
                                 </div>
                             </div>
+                            <?php
+                            $periods = $koneksi->query(
+                                'SELECT * FROM periode ORDER BY id DESC'
+                            );
+                            $data = $periods->fetch_assoc();
+
+                            $id_periode = $data['id'];
+                            $items = $koneksi->query(
+                                "SELECT alternatif.*, kelurahan.kelurahan FROM alternatif JOIN kelurahan ON alternatif.id_kelurahan = kelurahan.id WHERE alternatif.id_periode = $id_periode ORDER BY kelurahan.kelurahan ASC;"
+                            );
+                            ?>
+                            <?php if ($items->num_rows == 0): ?>
+                                <div class="row" id="notif_data">
+                                    <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                                        <strong>Warning!</strong> Data alternatif kosong pada periode ini/periode administrasi belum ditutup.
+                                        <button type="button" class="btn-close btn-sm" data-bs-dismiss="alert" aria-label="Close"></button>
+                                    </div>
+                                </div>
+                            <?php endif; ?>
                             <div class="table-responsive">
                                 <table id="myTable" class="table table-striped" style="width:100%; text-align: center;">
                                     <thead>
                                         <tr>
-                                            <th style="text-align: center;">Rangking</th>
+                                            <th style="text-align: center;">No</th>
+                                            <th style="text-align: center;">ID Kelurahan</th>
                                             <th style="text-align: center;">Kelurahan</th>
-                                            <th style="text-align: center;">Total Nilai Akhir</th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <?php
-                                        $periods = $koneksi->query(
-                                            'SELECT * FROM periode ORDER BY id DESC'
-                                        );
-                                        $data = $periods->fetch_assoc();
-
-                                        $id_periode = $data['id'];
-                                        $items = $koneksi->query(
-                                            "SELECT kelurahan.kelurahan, SUM(nilai_sub_indikator.point) AS total_nilai_akhir FROM administrasi JOIN nilai_sub_indikator ON administrasi.id_nilai_sub_indikator = nilai_sub_indikator.id JOIN kelurahan ON administrasi.id_kelurahan = kelurahan.id WHERE administrasi.id_periode = $id_periode GROUP BY administrasi.id_kelurahan, kelurahan.kelurahan ORDER BY total_nilai_akhir DESC;"
-                                        );
-                                        ?>
                                         <?php $no = 1; ?>
                                         <?php foreach ($items as $item): ?>
                                             <tr align="center">
@@ -109,10 +117,10 @@ if ($_SESSION['role'] != 'admin') {
                                                     <?= $no ?>
                                                 </td>
                                                 <td>
-                                                    <?= $item['kelurahan'] ?>
+                                                    <?= $item['id_kelurahan'] ?>
                                                 </td>
                                                 <td>
-                                                    <?= $item['total_nilai_akhir'] ?>
+                                                    <?= $item['kelurahan'] ?>
                                                 </td>
                                             </tr>
                                             <?php $no++; ?>
@@ -160,15 +168,20 @@ if ($_SESSION['role'] != 'admin') {
                         success: function(response) {
                             // Bersihkan tabel
                             table.clear();
+                            $('#notif_data').empty();
 
                             // Tambahkan data baru ke tabel
                             response.data.forEach(row => {
                                 table.row.add([
-                                    row.ranking,
+                                    row.no,
+                                    row.id_kelurahan,
                                     row.kelurahan,
-                                    row.total_nilai_akhir,
                                 ]);
                             });
+
+                            if (Array.isArray(response.data) && response.data.length === 0) {
+                                $('#notif_data').append('<div class="alert alert-warning alert-dismissible fade show" role="alert"><strong>Warning!</strong> Data alternatif kosong pada periode ini/periode administrasi belum ditutup.<button type="button" class="btn-close btn-sm" data-bs-dismiss="alert" aria-label="Close"></button></div>');
+                            }
 
                             // Render ulang tabel
                             table.draw();

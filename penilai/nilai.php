@@ -1,6 +1,6 @@
 <?php
 session_start();
-include 'koneksi.php';
+include '../koneksi.php';
 
 // Periksa apakah pengguna sudah login
 if (!isset($_SESSION['id_user']) || empty($_SESSION['id_user'])) {
@@ -47,21 +47,21 @@ if ($_SESSION['role'] != 'penilai') {
 
 <body class="hold-transition sidebar-mini">
     <div class="wrapper">
-        <?php include 'header.php'; ?>
-        <?php include 'penilai_sidebar.php'; ?>
+        <?php include '../layouts/header.php'; ?>
+        <?php include '../layouts/penilai_sidebar.php'; ?>
         <div class="content-wrapper">
             <section class="content">
-            <br>
-            <!-- Page Title -->
-            <div class="pagetitle p-2">
-                <h1>Data Penilaian</h1>
-            </div>
-            <!-- End Page Title -->
-            <!-- Home Page -->
-    
+                <br>
+                <!-- Page Title -->
+                <div class="pagetitle p-2">
+                    <h1>Data Penilaian</h1>
+                </div>
+                <!-- End Page Title -->
+                <!-- Home Page -->
+
         </div>
     </div>
-    
+
 </body>
 
 </html>
