@@ -1,6 +1,11 @@
 <?php
 session_start();
-include '../koneksi.php';
+include '../../koneksi.php';
+$id_periode = $_GET['id_periode'];
+
+$periode = $koneksi->query(
+    "SELECT * FROM periode WHERE id = '$id_periode'"
+)->fetch_assoc();
 
 // Periksa apakah pengguna sudah login
 if (!isset($_SESSION['id_user']) || empty($_SESSION['id_user'])) {
@@ -46,22 +51,40 @@ if ($_SESSION['role'] != 'penilai') {
 </head>
 
 <body class="hold-transition sidebar-mini">
+    <?php if ($periode['tutup_periode_administrasi'] == '0') : ?>
+        <script>
+            // Menjalankan SweetAlert secara otomatis saat halaman dimuat
+            window.onload = function() {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Periode administrasi belum ditutup!',
+                    text: 'Anda belum bisa memberikan penilaian pada periode ini.',
+                    confirmButtonText: 'OK',
+                    allowOutsideClick: false, // Mencegah menutup dengan klik di luar modal
+                }).then((result) => {
+                    // Redirect ke halaman tertentu setelah pesan ditutup
+                    if (result.isConfirmed) {
+                        window.location.href = '/penilai/periode/lihat.php'; // Ganti URL dengan halaman tujuan
+                    }
+                });
+            };
+        </script>
+    <?php endif; ?>
     <div class="wrapper">
-        <?php include '../layouts/header.php'; ?>
-        <?php include '../layouts/penilai_sidebar.php'; ?>
+        <?php include '../../layouts/header.php'; ?>
+        <?php include '../../layouts/penilai_sidebar_periode.php'; ?>
         <div class="content-wrapper">
             <section class="content">
                 <br>
                 <!-- Page Title -->
                 <div class="pagetitle p-2">
-                    <h1>Data Penilaian</h1>
+                    <h1>Data Penilaian Periode <?= $periode['periode'] ?></h1>
                 </div>
                 <!-- End Page Title -->
                 <!-- Home Page -->
-
+            </section>
         </div>
     </div>
-
 </body>
 
 </html>

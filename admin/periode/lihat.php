@@ -39,6 +39,21 @@ if ((isset($_GET['tutup_adm'])) && ($_GET['tutup_adm'] == true)) {
         $failed = 'Periode adimistrasi ' . $nama_periode . ' gagal ditutup!';
     }
 }
+if ((isset($_GET['tutup_periode'])) && ($_GET['tutup_periode'] == true)) {
+    $id_periode = $_GET['id_periode'];
+    $update = $koneksi->query(
+        "UPDATE periode SET tutup_periode = '1' WHERE id = $id_periode"
+    );
+    $periode = $koneksi->query(
+        "SELECT * FROM periode WHERE id = '$id_periode'"
+    )->fetch_assoc();
+    $nama_periode = $periode['periode'];
+    if ($update) {
+        $success = 'Periode ' . $nama_periode . ' telah ditutup!';
+    } else {
+        $failed = 'Periode ' . $nama_periode . ' gagal ditutup!';
+    }
+}
 
 if ((isset($_GET['action'])) && ($_GET['action'] == 'add')) {
     $periode = $_POST['periode'];

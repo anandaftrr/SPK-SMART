@@ -5,15 +5,15 @@
         <nav class="mt-2">
             <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
                 <li class="nav-item">
-                    <a href="/penilai/dashboard.php" class="nav-link">
-                        <i class="nav-icon fas fa-home" style="color: #fcfcfc;"></i>
-                        <p style="color: #fcfcfc;"> Dashboard </p>
+                    <a href="/penilai/periode/lihat.php" class="nav-link">
+                        <i class="nav-icon fa fa-arrow-left" style="color: #fcfcfc;"></i>
+                        <p style="color: #fcfcfc;"> Back </p>
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a href="/penilai/periode/lihat.php" class="nav-link">
-                        <i class="nav-icon fas fa-fa-solid fa-clock" style="color: #fcfcfc;"></i>
-                        <p style="color: #fcfcfc;"> Periode </p>
+                    <a href="/penilai/nilai/nilai.php?id_periode=<?= $_GET['id_periode'] ?>" class="nav-link">
+                        <i class="nav-icon fas fa-clipboard-check" style="color: #fcfcfc;"></i>
+                        <p style="color: #fcfcfc;"> Data Penilaian </p>
                     </a>
                 </li>
             </ul>
