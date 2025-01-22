@@ -145,7 +145,6 @@ if ($_SESSION['role'] != 'penilai') {
                             </div>
                         </div>
                     </div>
-                    <!--Tambah Data-->
                 </div>
             </section>
         </div>

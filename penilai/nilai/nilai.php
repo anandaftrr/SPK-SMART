@@ -2,6 +2,7 @@
 session_start();
 include '../../koneksi.php';
 $id_periode = $_GET['id_periode'];
+$back = '/penilai/periode/lihat.php';
 
 $periode = $koneksi->query(
     "SELECT * FROM periode WHERE id = '$id_periode'"
@@ -81,10 +82,116 @@ if ($_SESSION['role'] != 'penilai') {
                     <h1>Data Penilaian Periode <?= $periode['periode'] ?></h1>
                 </div>
                 <!-- End Page Title -->
-                <!-- Home Page -->
+                <div class="card">
+                    <div class="card-body">
+                        <?php
+                        $alternatives = $koneksi->query(
+                            'SELECT alternatif.*, kelurahan.kelurahan FROM alternatif JOIN kelurahan ON kelurahan.id = alternatif.id_kelurahan WHERE id_periode = ' . $id_periode . ' ORDER BY kelurahan.kelurahan;'
+                        );
+                        ?>
+                        <?php if ($alternatives->num_rows == 0): ?>
+                            <div class="row" id="notif_data">
+                                <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                                    <strong>Warning!</strong> Data alternatif kosong pada periode ini.
+                                    <button type="button" class="btn-close btn-sm" data-bs-dismiss="alert" aria-label="Close"></button>
+                                </div>
+                            </div>
+                        <?php endif; ?>
+                        <div class="table-responsive">
+                            <table id="myTable" class="table table-striped" style="width:100%">
+                                <thead>
+                                    <tr>
+                                        <th style="text-align: center;">No</th>
+                                        <th style="text-align: center;">Alternatif</th>
+                                        <th style="text-align: center;">Presentasi</th>
+                                        <th style="text-align: center;">Wawancara</th>
+                                        <th style="text-align: center;">Klarifikasi Lapangan</th>
+                                        <th style="text-align: center;">Aksi</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <?php $no = 1; ?>
+                                    <?php foreach ($alternatives as $alternative): ?>
+                                        <tr align="center">
+                                            <td><?= $no ?></td>
+                                            <td>
+                                                <?= $alternative['kelurahan'] ?>
+                                            </td>
+                                            <td>
+                                                <?php
+
+                                                $sub_presentasi = $koneksi->query(
+                                                    'SELECT * FROM sub_presentasi WHERE id_alternatif = ' . $alternative['id'] . ';'
+                                                )->fetch_assoc();
+                                                if ($sub_presentasi) {
+                                                    echo round(($sub_presentasi['isi_materi'] + $sub_presentasi['organisir_waktu'] + $sub_presentasi['tanya_jawab']) / 3, 3);
+                                                } else {
+                                                    echo '-';
+                                                }
+
+                                                ?>
+                                            </td>
+                                            <td>
+                                                <?php
+
+                                                $sub_wawancara = $koneksi->query(
+                                                    'SELECT * FROM sub_wawancara WHERE id_alternatif = ' . $alternative['id'] . ';'
+                                                )->fetch_assoc();
+                                                if ($sub_wawancara) {
+                                                    echo round(($sub_wawancara['kerjasama_tim'] + $sub_wawancara['kemampuan_lurah'] + $sub_wawancara['kemampuan_problem_solving']) / 3, 3);
+                                                } else {
+                                                    echo '-';
+                                                }
+
+                                                ?>
+                                            </td>
+                                            <td>
+                                                -
+                                            </td>
+                                            <td>
+                                                <a href="/penilai/nilai/detail.php?id_periode=<?= $id_periode ?>&id_alternatif=<?= $alternative['id'] ?>">
+                                                    <button type="button" class="btn btn-info btn-sm">
+                                                        <i class="fas fa-search"></i>
+                                                    </button>
+                                                </a>
+                                            </td>
+                                        </tr>
+                                        <?php $no++; ?>
+                                    <?php endforeach; ?>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
             </section>
         </div>
     </div>
+    <script>
+        // Membuat data table memiliki fungsi show dan search
+        $(document).ready(function() {
+            $('#myTable').DataTable(); //Mengubah tabel dengan ID myTable menjadi tabel yang interaktif dengan fitur pencarian, paginasi, dan pengurutan.
+        });
+
+
+        ClassicEditor
+            .create(document.querySelector('#detail'))
+            .then(editor => {
+                console.log(editor);
+            })
+            .catch(error => {
+                console.error(error);
+            });
+
+        function checkTutupAdmin() {
+            Swal.fire({
+                icon: 'warning',
+                title: 'Periode administrasi belum ditutup!',
+                text: 'Anda belum bisa memberikan penilaian pada periode ini.',
+                confirmButtonText: 'OK',
+                allowOutsideClick: false, // Mencegah menutup dengan klik di luar modal
+            });
+        }
+    </script>
 </body>
 
 </html>

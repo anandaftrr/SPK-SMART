@@ -63,7 +63,7 @@ if ($_SESSION['role'] != 'admin') {
                 <div class="table-responsive">
                     <div class="card mt-3">
                         <div class="card-body">
-                            <div class="row mt-5">
+                            <div class="row">
                                 <div class="col">
                                 </div>
                                 <div class="col-auto">

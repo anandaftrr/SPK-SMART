@@ -21,13 +21,29 @@ if ((isset($_GET['tutup_adm'])) && ($_GET['tutup_adm'] == true)) {
         "UPDATE periode SET tutup_periode_administrasi = '1' WHERE id = $id_periode"
     );
     $adms = $koneksi->query(
-        "SELECT kelurahan.id, kelurahan.kelurahan, SUM(nilai_sub_indikator.point) AS total_nilai_akhir FROM administrasi JOIN nilai_sub_indikator ON administrasi.id_nilai_sub_indikator = nilai_sub_indikator.id JOIN kelurahan ON administrasi.id_kelurahan = kelurahan.id WHERE administrasi.id_periode = $id_periode GROUP BY administrasi.id_kelurahan, kelurahan.kelurahan ORDER BY total_nilai_akhir DESC;"
+        "SELECT kelurahan.id, kelurahan.kelurahan, SUM(nilai_sub_indikator.point) AS total_nilai_akhir FROM administrasi JOIN nilai_sub_indikator ON administrasi.id_nilai_sub_indikator = nilai_sub_indikator.id JOIN kelurahan ON administrasi.id_kelurahan = kelurahan.id WHERE administrasi.id_periode = $id_periode GROUP BY administrasi.id_kelurahan, kelurahan.kelurahan ORDER BY total_nilai_akhir DESC LIMIT 4;"
     );
     foreach ($adms as $adm) {
         $id_kelurahan = $adm['id'];
         $insert = $koneksi->query(
             "INSERT INTO alternatif (id_periode, id_kelurahan) VALUES ($id_periode, '$id_kelurahan')"
         );
+
+        $alternatif = $koneksi->query(
+            "SELECT * FROM alternatif WHERE id_periode = $id_periode AND id_kelurahan = '$id_kelurahan'"
+        )->fetch_assoc();
+        $id_alternatif = $alternatif['id'];
+
+        $data_administrasi = $koneksi->query(
+            "SELECT * FROM administrasi WHERE id_kelurahan = '$id_kelurahan' AND id_periode = $id_periode;"
+        );
+        foreach ($data_administrasi as $data_administrasi_item) {
+            $id_nilai_sub_indikator = $data_administrasi_item['id_nilai_sub_indikator'];
+            $tak_bernilai = $data_administrasi_item['tak_bernilai'];
+            $insert = $koneksi->query(
+                "INSERT INTO sub_verifikasi_lapangan (id_alternatif, id_nilai_sub_indikator, tak_bernilai) VALUES ($id_alternatif, $id_nilai_sub_indikator, '$tak_bernilai')"
+            );
+        }
     }
     $periode = $koneksi->query(
         "SELECT * FROM periode WHERE id = '$id_periode'"
@@ -214,12 +230,9 @@ if ((isset($_GET['action'])) && ($_GET['action'] == 'delete')) {
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title" id="exampleModalLabel">Tambah Periode</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
                     </div>
                     <div class="modal-body">
-                        <form class="mx-3 mt-3" action="lihat.php?action=add" method="POST" onsubmit="">
+                        <form class="mx-3" action="lihat.php?action=add" method="POST" onsubmit="">
                             <div class="form-group">
                                 <label for="periode">Periode</label>
                                 <input type="number" class="form-control" id="periode" name="periode" min="2020" max="2024" required>

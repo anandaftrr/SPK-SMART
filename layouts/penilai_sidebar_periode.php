@@ -5,7 +5,7 @@
         <nav class="mt-2">
             <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
                 <li class="nav-item">
-                    <a href="/penilai/periode/lihat.php" class="nav-link">
+                    <a href="<?= $back ?>" class="nav-link">
                         <i class="nav-icon fa fa-arrow-left" style="color: #fcfcfc;"></i>
                         <p style="color: #fcfcfc;"> Back </p>
                     </a>
