@@ -70,40 +70,35 @@ if ($_SESSION['role'] != 'pimpinan') {
                     <div class="card mt-3">
                         <div class="card-body">
                             <div class="table-responsive">
-                                <table id="myTable" class="table table-striped" style="width:100%">
+                                <table id="myTable" class="table table-striped" style="width:100%; text-align: center;">
                                     <thead>
                                         <tr>
                                             <th style="text-align: center;">Rangking</th>
-                                            <th style="text-align: center;">ID Kelurahan</th>
-                                            <th style="text-align: center;">Nama Kelurahan</th>
+                                            <th style="text-align: center;">Kelurahan</th>
                                             <th style="text-align: center;">Total Nilai Akhir</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         <?php
-                                        $kelurahan = $koneksi->query(
-                                            'SELECT id_kelurahan FROM administrasi WHERE id_periode = 3 GROUP BY id_kelurahan;'
+                                        $items = $koneksi->query(
+                                            "SELECT kelurahan.kelurahan, SUM(nilai_sub_indikator.point) AS total_nilai_akhir FROM administrasi JOIN nilai_sub_indikator ON administrasi.id_nilai_sub_indikator = nilai_sub_indikator.id JOIN kelurahan ON administrasi.id_kelurahan = kelurahan.id WHERE administrasi.id_periode = $id_periode GROUP BY administrasi.id_kelurahan, kelurahan.kelurahan ORDER BY total_nilai_akhir DESC;"
                                         );
-                                        $no = 1;
                                         ?>
-                                        <?php foreach ($periods as $periode): ?>
+                                        <?php $no = 1; ?>
+                                        <?php foreach ($items as $item): ?>
                                             <tr align="center">
-                                                <td><?= $no ?></td>
                                                 <td>
-                                                    <?= $periode['periode'] ?>
+                                                    <?= $no ?>
                                                 </td>
                                                 <td>
-                                                    <a href="/pimpinan/pimpinan_hasiladm.php?id_periode=<?= $periode['id'] ?>">
-                                                        <button type="button" class="btn btn-info btn-sm">
-                                                            <i class="fa fa-search" aria-hidden="true"></i>
-                                                        </button>
-                                                    </a>
+                                                    <?= $item['kelurahan'] ?>
+                                                </td>
+                                                <td>
+                                                    <?= $item['total_nilai_akhir'] ?>
                                                 </td>
                                             </tr>
-                                        <?php
-                                            $no++;
-                                        endforeach;
-                                        ?>
+                                            <?php $no++; ?>
+                                        <?php endforeach; ?>
                                     </tbody>
                                 </table>
                             </div>

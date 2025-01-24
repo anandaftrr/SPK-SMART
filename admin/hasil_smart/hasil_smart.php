@@ -1,7 +1,6 @@
 <?php
 session_start();
-include '../koneksi.php';
-$id_periode = $_GET['id_periode'];
+include '../../koneksi.php';
 
 // Periksa apakah pengguna sudah login
 if (!isset($_SESSION['id_user']) || empty($_SESSION['id_user'])) {
@@ -10,7 +9,7 @@ if (!isset($_SESSION['id_user']) || empty($_SESSION['id_user'])) {
 }
 
 // Periksa peran pengguna
-if ($_SESSION['role'] != 'pimpinan') {
+if ($_SESSION['role'] != 'admin') {
     // Jika bukan admin, redirect ke halaman lain atau berikan pesan akses ditolak
     header('Location: unauthorized.php');
     exit;
@@ -48,19 +47,36 @@ if ($_SESSION['role'] != 'pimpinan') {
 
 <body class="hold-transition sidebar-mini">
     <div class="wrapper">
-        <?php include '../layouts/header.php'; ?>
-        <?php include '../layouts/pimpinan_sidebar_proses.php'; ?>
+        <?php include '../../layouts/header.php'; ?>
+        <?php include '../../layouts/admin_sidebar.php'; ?>
         <div class="content-wrapper">
             <section class="content">
                 <br>
                 <!-- Page Title -->
                 <div class="pagetitle p-2">
-                    <h1>Hasil Penilaian Metode SMART</h1>
+                    <h1>Hasil SMART</h1>
                 </div>
                 <!-- End Page Title -->
-                <!-- Home Page -->
                 <div class="card">
                     <div class="card-body">
+                        <div class="row">
+                            <div class="col">
+                            </div>
+                            <div class="col-auto">
+                                <div class="form-group">
+                                    <select name="orbitas" id="orbitas" class="form-control" onchange="changeKelurahanPeriode(this.value)" required>
+                                        <?php
+                                        $periods = $koneksi->query(
+                                            'SELECT * FROM periode ORDER BY id DESC'
+                                        );
+                                        ?>
+                                        <?php foreach ($periods as $periode): ?>
+                                            <option value="<?= $periode['id'] ?>">Periode <?= $periode['periode'] ?> </option>
+                                        <?php endforeach; ?>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
                         <div class="table-responsive">
                             <table id="myTable" class="table table-striped" style="width:100%; text-align: center;">
                                 <thead>
@@ -72,6 +88,12 @@ if ($_SESSION['role'] != 'pimpinan') {
                                 </thead>
                                 <tbody>
                                     <?php
+                                    $periods = $koneksi->query(
+                                        'SELECT * FROM periode ORDER BY id DESC'
+                                    );
+                                    $data = $periods->fetch_assoc();
+
+                                    $id_periode = $data['id'];
                                     $items = $koneksi->query(
                                         "SELECT kelurahan.kelurahan, hasil.hasil FROM hasil LEFT JOIN alternatif ON alternatif.id = hasil.id_alternatif LEFT JOIN periode ON periode.id = alternatif.id_periode LEFT JOIN kelurahan ON kelurahan.id = alternatif.id_kelurahan WHERE periode.id = $id_periode ORDER BY hasil DESC;"
                                     );
@@ -99,6 +121,70 @@ if ($_SESSION['role'] != 'pimpinan') {
             </section>
         </div>
     </div>
+    <script>
+        // Membuat data table memiliki fungsi show dan search
+        $(document).ready(function() {
+            $('#myTable').DataTable(); //Mengubah tabel dengan ID myTable menjadi tabel yang interaktif dengan fitur pencarian, paginasi, dan pengurutan.
+        });
+
+
+        ClassicEditor
+            .create(document.querySelector('#detail'))
+            .then(editor => {
+                console.log(editor);
+            })
+            .catch(error => {
+                console.error(error);
+            });
+
+        function checkTutupAdmin() {
+            Swal.fire({
+                icon: 'warning',
+                title: 'Periode administrasi belum ditutup!',
+                text: 'Anda belum bisa memberikan penilaian pada periode ini.',
+                confirmButtonText: 'OK',
+                allowOutsideClick: false, // Mencegah menutup dengan klik di luar modal
+            });
+        }
+    </script>
+    <script>
+        $(document).ready(function() {
+            // Inisialisasi DataTables
+            const table = $('#myTable').DataTable();
+
+            // Fungsi untuk mengganti data tabel sesuai periode
+            window.changeKelurahanPeriode = function(periodeId) {
+                console.log(periodeId);
+                $.ajax({
+                    url: 'get_data.php', // Endpoint PHP untuk mendapatkan data berdasarkan periode
+                    type: 'POST',
+                    data: {
+                        periode: periodeId
+                    },
+                    dataType: 'json',
+                    success: function(response) {
+                        // Bersihkan tabel
+                        table.clear();
+
+                        // Tambahkan data baru ke tabel
+                        response.data.forEach(row => {
+                            table.row.add([
+                                row.ranking,
+                                row.kelurahan,
+                                row.hasil,
+                            ]);
+                        });
+
+                        // Render ulang tabel
+                        table.draw();
+                    },
+                    error: function() {
+                        alert('Gagal memuat data. Silakan coba lagi.');
+                    }
+                });
+            };
+        });
+    </script>
 </body>
 
 </html>

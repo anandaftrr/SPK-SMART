@@ -41,7 +41,7 @@
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a href="admin_hasilsmart.php" class="nav-link">
+                    <a href="/admin/hasil_smart/hasil_smart.php" class="nav-link">
                         <i class="nav-icon fas fa-solid fa-trophy" style="color: #fcfcfc;"></i>
                         <p style="color: #fcfcfc;"> Hasil Proses SMART </p>
                     </a>

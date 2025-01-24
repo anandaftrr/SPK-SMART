@@ -5,7 +5,7 @@
         <nav class="mt-2">
             <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
                 <li class="nav-item">
-                    <a href="pimpinan_dashboard.php" class="nav-link">
+                    <a href="/pimpinan/periode.php" class="nav-link">
                         <i class="nav-icon fas fa-arrow-left" style="color: #fcfcfc;"></i>
                         <p style="color: #fcfcfc;"> Home </p>
                     </a>

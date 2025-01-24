@@ -92,6 +92,18 @@ if ($_SESSION['role'] != 'kelurahan') {
                                                     );
                                                     $administrasi = $administrasi->fetch_assoc();
 
+                                                    $kel_rec = $koneksi->query(
+                                                        "SELECT kelurahan.id, kelurahan.kelurahan, SUM(nilai_sub_indikator.point) AS total_nilai_akhir FROM administrasi JOIN nilai_sub_indikator ON administrasi.id_nilai_sub_indikator = nilai_sub_indikator.id JOIN kelurahan ON administrasi.id_kelurahan = kelurahan.id WHERE administrasi.id_periode = $id_periode GROUP BY administrasi.id_kelurahan, kelurahan.kelurahan ORDER BY total_nilai_akhir DESC LIMIT 4;"
+                                                    );
+
+                                                    $rekomendasi = 0;
+
+                                                    foreach ($kel_rec as $kel) {
+                                                        if ($kel['id'] == $id_kelurahan) {
+                                                            $rekomendasi = 1;
+                                                        }
+                                                    }
+
                                                     $val_administrasi = [$id_kelurahan, $id_periode];
                                                     if ($administrasi['total_nilai_akhir'] == null) {
                                                         $val_administrasi[] = "Periode " . $periode['periode'];
@@ -100,6 +112,8 @@ if ($_SESSION['role'] != 'kelurahan') {
                                                         $val_administrasi[] = "Periode " . $periode['periode'];
                                                         $val_administrasi[] = $administrasi['total_nilai_akhir'];
                                                     }
+
+                                                    $val_administrasi[] = $rekomendasi;
 
                                                     $val_administrasi = implode("| ", $val_administrasi);
 
@@ -125,15 +139,34 @@ if ($_SESSION['role'] != 'kelurahan') {
                                     ?>
                                 </div>
                                 <center>
-                                    <h4>Total Nilai Akhir <span id="periode">Periode <?= $data['periode'] ?></span></h4>
+                                    <h4>Total Nilai Akhir <?= $id_kelurahan ?> <span id="periode">Periode <?= $data['periode'] ?></span></h4>
                                 </center>
                                 <center>
                                     <h1 id="total_nilai_akhir" class="pagetitle p-2"><?= $administrasi_first['total_nilai_akhir'] ? $administrasi_first['total_nilai_akhir'] : '-' ?></h1>
                                 </center>
                                 <center>
-                                    <h4>
-                                        <span class="badge rounded-pill bg-primary">Rekomendasi</span>
-                                    </h4>
+                                    <?php
+                                    $kel_rec_first = $koneksi->query(
+                                        "SELECT kelurahan.id, kelurahan.kelurahan, SUM(nilai_sub_indikator.point) AS total_nilai_akhir FROM administrasi JOIN nilai_sub_indikator ON administrasi.id_nilai_sub_indikator = nilai_sub_indikator.id JOIN kelurahan ON administrasi.id_kelurahan = kelurahan.id WHERE administrasi.id_periode = $id_periode GROUP BY administrasi.id_kelurahan, kelurahan.kelurahan ORDER BY total_nilai_akhir DESC LIMIT 4;"
+                                    );
+
+                                    $rekomendasi_first = 0;
+
+                                    foreach ($kel_rec_first as $kel_first) {
+                                        if ($kel_first['id'] == $id_kelurahan) {
+                                            $rekomendasi_first = 1;
+                                        }
+                                    }
+                                    ?>
+                                    <?php if ($rekomendasi_first == 1): ?>
+                                        <h4 id="stat-rec">
+                                            <span class="badge rounded-pill bg-primary">Rekomendasi</span>
+                                        </h4>
+                                    <?php else: ?>
+                                        <h4 id="stat-rec">
+                                            <span class="badge rounded-pill bg-danger">Tidak Rekomendasi</span>
+                                        </h4>
+                                    <?php endif; ?>
                                 </center>
                             </div>
 
@@ -151,6 +184,14 @@ if ($_SESSION['role'] != 'kelurahan') {
 
             document.getElementById("periode").textContent = resultArray[2];
             document.getElementById("total_nilai_akhir").textContent = resultArray[3];
+
+            if (resultArray[4] === "1") {
+                $('#stat-rec').empty();
+                $('#stat-rec').append('<span class="badge rounded-pill bg-primary">Rekomendasi</span>');
+            } else {
+                $('#stat-rec').empty();
+                $('#stat-rec').append('<span class="badge rounded-pill bg-danger">Tidak Rekomendasi</span>');
+            }
         }
     </script>
 

@@ -36,12 +36,11 @@
             })
 
             swalWithBootstrapButtons.fire({
-                title: 'Apakah kamu yakin?',
-                text: "Kamu tidak akan dapat kembali ke halaman ini!",
+                title: 'Apakah ingin logout?',
                 icon: 'warning',
                 showCancelButton: true,
-                confirmButtonText: 'Ya, yakin!',
-                cancelButtonText: 'Tidak, batal!',
+                confirmButtonText: 'Ya',
+                cancelButtonText: 'Tidak',
                 reverseButtons: true
             }).then((result) => {
                 if (result.isConfirmed) {
