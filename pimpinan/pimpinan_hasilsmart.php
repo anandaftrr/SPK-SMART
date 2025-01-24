@@ -5,14 +5,14 @@ $id_periode = $_GET['id_periode'];
 
 // Periksa apakah pengguna sudah login
 if (!isset($_SESSION['id_user']) || empty($_SESSION['id_user'])) {
-    header('Location: login.php');
+    header('Location: /autentikasi/login.php');
     exit;
 }
 
 // Periksa peran pengguna
 if ($_SESSION['role'] != 'pimpinan') {
     // Jika bukan admin, redirect ke halaman lain atau berikan pesan akses ditolak
-    header('Location: unauthorized.php');
+    header('Location: /autentikasi/unauthorized.php');
     exit;
 }
 ?>

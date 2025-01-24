@@ -3,14 +3,14 @@ session_start();
 
 // Periksa apakah pengguna sudah loginnnn
 if (!isset($_SESSION['id_user']) || empty($_SESSION['id_user'])) {
-    header('Location: login.php');
+    header('Location: /autentikasi/login.php');
     exit;
 }
 
 // Periksa peran pengguna
 if ($_SESSION['role'] != 'admin') {
     // Jika bukan admin, redirect ke halaman lain atau berikan pesan akses ditolak
-    header('Location: unauthorized.php');
+    header('Location: /autentikasi/unauthorized.php');
     exit;
 }
 ?>
