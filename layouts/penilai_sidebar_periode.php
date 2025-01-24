@@ -16,6 +16,18 @@
                         <p style="color: #fcfcfc;"> Data Penilaian </p>
                     </a>
                 </li>
+                <li class="nav-item">
+                    <a href="/penilai/normalisasi/normalisasi.php?id_periode=<?= $_GET['id_periode'] ?>" class="nav-link">
+                        <i class="nav-icon fas fa-solid fa-list" style="color: #fcfcfc;"></i>
+                        <p style="color: #fcfcfc;"> Hasil Normalisasi </p>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="/penilai/hasil_smart/hasil_smart.php?id_periode=<?= $_GET['id_periode'] ?>" class="nav-link">
+                        <i class="nav-icon fas fa-solid fa-trophy" style="color: #fcfcfc;"></i>
+                        <p style="color: #fcfcfc;"> Hasil SMART </p>
+                    </a>
+                </li>
             </ul>
         </nav>
         <!-- /.sidebar-menu -->

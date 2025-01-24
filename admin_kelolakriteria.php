@@ -27,7 +27,7 @@ if ($_SESSION['role'] != 'admin') {
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
 
     <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/css/bootstrap.min.css">
-    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css"> 
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css">
 
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/admin-lte@3.0.5/dist/css/adminlte.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.15.3/css/all.min.css">
@@ -53,79 +53,78 @@ if ($_SESSION['role'] != 'admin') {
         <?php include 'admin_sidebar.php'; ?>
         <div class="content-wrapper">
             <section class="content">
-            <br>
-            <!-- Page Title -->
-            <div class="pagetitle p-2">
-                <h1>Kelola Kriteria</h1>
-            </div>
-            <!-- End Page Title -->
-            <!-- Home Page -->
-            <div class="card mt-3">
-                <div class="card-body">
-                    <div class="table-responsive">
-                        <table id="myTable" class="table table-striped" style="width:100%" >
-                <thead>
-                    <tr>
-                        <th style="text-align: center;">Nama Kriteria</th>
-                        <th style="text-align: center;">Keterangan</th>
-                        <th style="text-align: center;">Bobot</th>
-                        <th style="text-align: center;">Edit</th>
-                        <th style="text-align: center;">Hapus</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <?php
-                    $kriteria = $koneksi->query(
-                        'SELECT * FROM kriteria ORDER BY id_kriteria ASC'
-                    );
-                    foreach ($kriteria as $key) {
+                <br>
+                <!-- Page Title -->
+                <div class="pagetitle p-2">
+                    <h1>Kelola Kriteria</h1>
+                </div>
+                <!-- End Page Title -->
+                <!-- Home Page -->
+                <div class="card mt-3">
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table id="myTable" class="table table-striped" style="width:100%">
+                                <thead>
+                                    <tr>
+                                        <th style="text-align: center;">Nama Kriteria</th>
+                                        <th style="text-align: center;">Keterangan</th>
+                                        <th style="text-align: center;">Bobot</th>
+                                        <th style="text-align: center;">Edit</th>
+                                        <th style="text-align: center;">Hapus</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <?php
+                                    $kriteria = $koneksi->query(
+                                        'SELECT * FROM kriteria ORDER BY id_kriteria ASC'
+                                    );
+                                    foreach ($kriteria as $key) {
 
-                        $nama = 'kriteriadel' . $key['id_kriteria'];
-                        $alamat = 'kriteriadel';
-                        ?>
-                        <tr align="center">
-                            <td>
-                                <?= $key['nama_kriteria'] ?>
-                            </td>
-                            <td>
-                                <?= $key['ket_kriteria'] ?>
-                            </td>
-                            <td>
-                                <?= $key['bobot'] ?>
-                            </td>
-                            <td>
-                                <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#kriteriaedit<?= $key[
-                                    'id_kriteria'
-                                ] ?>">
-                                    <i class="fas fa-edit"></i>
+                                        $nama = 'kriteriadel' . $key['id_kriteria'];
+                                        $alamat = 'kriteriadel';
+                                    ?>
+                                        <tr align="center">
+                                            <td>
+                                                <?= $key['nama_kriteria'] ?>
+                                            </td>
+                                            <td>
+                                                <?= $key['ket_kriteria'] ?>
+                                            </td>
+                                            <td>
+                                                <?= $key['bobot'] ?>
+                                            </td>
+                                            <td>
+                                                <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#kriteriaedit<?= $key['id_kriteria'] ?>">
+                                                    <i class="fas fa-edit"></i>
+                                                </button>
+                                            </td>
+                                            <td>
+                                                <button type="button" class="btn btn-danger btn-sm" onclick="<?= $nama ?>()">
+                                                    <i class="fas fa-trash"></i>
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    <?php
+                                    }
+                                    ?>
+                                </tbody>
+                            </table>
+                            <br>
+                            <div class="d-flex justify-content-end">
+                                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#kriteriaadd">
+                                    Tambah Data
                                 </button>
-                            </td>
-                            <td>
-                                <button type="button" class="btn btn-danger btn-sm" onclick="<?= $nama ?>()">
-                                    <i class="fas fa-trash"></i>
-                                </button>
-                            </td>
-                        </tr>
-                    <?php
-                    }
-                    ?> 
-                </tbody>
-            </table>
-            <br>
-            <div class="d-flex justify-content-end">
-                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#kriteriaadd">
-                    Tambah Data
-                </button>
-            </div>
+                            </div>
 
+                        </div>
+                    </div>
+                </div>
+                <!--Tambah Data-->
         </div>
     </div>
-</div>
-<!--Tambah Data-->
-</div>
-</div> 
 
-<script> // Membuat data table memiliki fungsi show dan search
+    <script>
+        // Membuat data table memiliki fungsi show dan search
         $(document).ready(function() {
             $('#myTable').DataTable(); //Mengubah tabel dengan ID myTable menjadi tabel yang interaktif dengan fitur pencarian, paginasi, dan pengurutan.
         });
@@ -139,7 +138,8 @@ if ($_SESSION['role'] != 'admin') {
             .catch(error => {
                 console.error(error);
             });
-</script>
+    </script>
 
 </body>
+
 </html>

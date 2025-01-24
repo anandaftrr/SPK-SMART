@@ -224,7 +224,21 @@ if ((isset($_GET['action'])) && ($_GET['action'] == 'editWawancara')) {
                     <div class="card-body">
                         <div class="row">
                             <div class="col-md-6">
-                                <h5>Verifikasi Lapangan: -</h5>
+                                <?php
+                                $total_nilai = $koneksi->query(
+                                    "SELECT SUM(nilai_sub_indikator.point) AS total_nilai FROM sub_verifikasi_lapangan LEFT JOIN nilai_sub_indikator ON nilai_sub_indikator.id = sub_verifikasi_lapangan.id_nilai_sub_indikator WHERE sub_verifikasi_lapangan.id_alternatif = $id_alternatif AND sub_verifikasi_lapangan.tak_bernilai = '0' AND sub_verifikasi_lapangan.hasil_verifikasi = '1';"
+                                )->fetch_assoc();
+
+                                $sub_ver_all = $koneksi->query(
+                                    "SELECT COUNT(id) AS total_row FROM sub_verifikasi_lapangan WHERE id_alternatif = $id_alternatif;"
+                                )->fetch_assoc();
+
+                                $sub_ver_not_null = $koneksi->query(
+                                    "SELECT COUNT(id) AS total_row FROM sub_verifikasi_lapangan WHERE id_alternatif = $id_alternatif AND hasil_verifikasi IS NOT null;"
+                                )->fetch_assoc();
+
+                                ?>
+                                <h5>Verifikasi Lapangan: <?= $total_nilai['total_nilai'] ? $total_nilai['total_nilai'] : '-' ?></h5>
                             </div>
                             <div class="col-md-6">
                                 <div class="d-flex justify-content-end">
@@ -237,7 +251,7 @@ if ((isset($_GET['action'])) && ($_GET['action'] == 'editWawancara')) {
                             </div>
                         </div>
                         <div class="row">
-                            <span>Status: <span class="badge rounded-pill bg-primary">Rekomendasi</span></span>
+                            <span>Status: <?= ($sub_ver_all['total_row'] == $sub_ver_not_null['total_row']) ? '<span class="badge rounded-pill bg-primary">Terverifikasi semua</span>' : '<span class="badge rounded-pill bg-danger">Belum terverifikasi semua</span>' ?></span>
                         </div>
                     </div>
                 </div>

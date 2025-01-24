@@ -98,7 +98,7 @@ if ($_SESSION['role'] != 'penilai') {
                             </div>
                         <?php endif; ?>
                         <div class="table-responsive">
-                            <table id="myTable" class="table table-striped" style="width:100%">
+                            <table id="myTable1" class="table table-striped" style="width:100%">
                                 <thead>
                                     <tr>
                                         <th style="text-align: center;">No</th>
@@ -146,7 +146,22 @@ if ($_SESSION['role'] != 'penilai') {
                                                 ?>
                                             </td>
                                             <td>
-                                                -
+                                                <?php
+                                                $total_nilai = $koneksi->query(
+                                                    "SELECT SUM(nilai_sub_indikator.point) AS total_nilai FROM sub_verifikasi_lapangan LEFT JOIN nilai_sub_indikator ON nilai_sub_indikator.id = sub_verifikasi_lapangan.id_nilai_sub_indikator WHERE sub_verifikasi_lapangan.id_alternatif = " . $alternative['id'] . " AND sub_verifikasi_lapangan.tak_bernilai = '0' AND sub_verifikasi_lapangan.hasil_verifikasi = '1';"
+                                                )->fetch_assoc();
+
+                                                $sub_ver_all = $koneksi->query(
+                                                    "SELECT COUNT(id) AS total_row FROM sub_verifikasi_lapangan WHERE id_alternatif = " . $alternative['id'] . ";"
+                                                )->fetch_assoc();
+
+                                                $sub_ver_not_null = $koneksi->query(
+                                                    "SELECT COUNT(id) AS total_row FROM sub_verifikasi_lapangan WHERE id_alternatif = " . $alternative['id'] . " AND hasil_verifikasi IS NOT null;"
+                                                )->fetch_assoc();
+
+                                                ?>
+                                                <?= $total_nilai['total_nilai'] ? $total_nilai['total_nilai'] : '-' ?><br>
+                                                <?= ($sub_ver_all['total_row'] == $sub_ver_not_null['total_row']) ? '<span class="badge rounded-pill bg-primary">Terverifikasi semua</span>' : '<span class="badge rounded-pill bg-danger">Belum terverifikasi semua</span>' ?>
                                             </td>
                                             <td>
                                                 <a href="/penilai/nilai/detail.php?id_periode=<?= $id_periode ?>&id_alternatif=<?= $alternative['id'] ?>">
@@ -160,6 +175,11 @@ if ($_SESSION['role'] != 'penilai') {
                                     <?php endforeach; ?>
                                 </tbody>
                             </table>
+                        </div>
+                        <div class="col-auto">
+                            <a href="/penilai/normalisasi/normalisasi.php?id_periode=<?= $_GET['id_periode'] ?>" class="btn btn-primary float-end">
+                                Normalisasi <i class="fas fa-arrow-right"></i>
+                            </a>
                         </div>
                     </div>
                 </div>
