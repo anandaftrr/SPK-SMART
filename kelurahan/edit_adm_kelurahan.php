@@ -88,6 +88,30 @@ $periode = $periode->fetch_assoc();
 </head>
 
 <body class="hold-transition sidebar-mini">
+    <?php
+    $periode_check = $koneksi->query(
+        "SELECT * FROM periode WHERE id = " . $_GET['id_periode'] . ";"
+    )->fetch_assoc();
+    ?>
+    <?php if ($periode_check['tutup_periode_administrasi'] == '1') : ?>
+        <script>
+            // Menjalankan SweetAlert secara otomatis saat halaman dimuat
+            window.onload = function() {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Periode administrasi telah ditutup!',
+                    text: 'Anda tidak bisa mengubah data administrasi pada periode ini.',
+                    confirmButtonText: 'OK',
+                    allowOutsideClick: false, // Mencegah menutup dengan klik di luar modal
+                }).then((result) => {
+                    // Redirect ke halaman tertentu setelah pesan ditutup
+                    if (result.isConfirmed) {
+                        window.location.href = '/kelurahan/dataadm.php'; // Ganti URL dengan halaman tujuan
+                    }
+                });
+            };
+        </script>
+    <?php endif; ?>
     <div class="wrapper">
         <?php include '../layouts/header.php'; ?>
         <?php include '../layouts/kelurahan_sidebar.php'; ?>

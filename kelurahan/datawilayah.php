@@ -214,7 +214,7 @@ if ($_SESSION['role'] != 'kelurahan') {
 
                                     ?>
                                     <div class="col-auto">
-                                        <a href="/kelurahan/edit_kelurahan_periode.php?id_kelurahan=<?= $id_kelurahan ?>&id_periode=<?= $id_periode ?>" id="buttonEdit">
+                                        <a href="#" id="buttonEdit" onclick="periodeADMStat('<?= $id_kelurahan ?>','<?= $id_periode ?>')">
                                             <button type="button" class="btn btn-success float-end" data-bs-toggle="modal" data-bs-target="#datawilayahedit">
                                                 <i class="fas fa-solid fa-edit"></i> Edit
                                             </button>
@@ -298,7 +298,7 @@ if ($_SESSION['role'] != 'kelurahan') {
             let resultArray = kelurahan_periode.split(", ");
 
             // Output the resulting array
-            console.log(resultArray[6]);
+            // console.log(resultArray[6]);
             document.getElementById("usia_kurang_15").textContent = resultArray[2];
             document.getElementById("usia_15_56").textContent = resultArray[3];
             document.getElementById("usia_lebih_56").textContent = resultArray[4];
@@ -307,8 +307,54 @@ if ($_SESSION['role'] != 'kelurahan') {
             document.getElementById("penduduk_perempuan").textContent = resultArray[7];
             document.getElementById("jumlah_kepala_keluarga").textContent = resultArray[8];
 
-            document.getElementById("buttonEdit").setAttribute("href", "/kelurahan/edit_kelurahan_periode.php?id_kelurahan=" + resultArray[0] + "&id_periode=" + resultArray[1]);
+            // document.getElementById("buttonEdit").setAttribute("href", "/kelurahan/edit_kelurahan_periode.php?id_kelurahan=" + resultArray[0] + "&id_periode=" + resultArray[1]);
+            document.getElementById("buttonEdit").setAttribute("onclick", "periodeADMStat('" + resultArray[0] + "','" + resultArray[1] + "')");
         }
+    </script>
+    <script>
+        $(document).ready(function() {
+            // Fungsi untuk mengganti data tabel sesuai periode
+            window.periodeADMStat = function(kelurahanId, periodeId) {
+                $.ajax({
+                    url: 'periodeADMStat.php', // Endpoint PHP untuk mendapatkan data berdasarkan periode
+                    type: 'POST',
+                    data: {
+                        periode: periodeId
+                    },
+                    dataType: 'json',
+                    success: function(response) {
+                        if (response.data.tutup_periode_administrasi === "1") {
+                            Swal.fire({
+                                icon: 'warning',
+                                title: 'Periode administrasi telah ditutup!',
+                                text: 'Anda tidak bisa mengubah data administrasi pada periode ini.',
+                                confirmButtonText: 'OK',
+                                allowOutsideClick: false, // Mencegah menutup dengan klik di luar modal
+                            });
+                        } else {
+                            window.location.href = '/kelurahan/edit_kelurahan_periode.php?id_kelurahan=' + kelurahanId + '&id_periode=' + periodeId;
+                        }
+                        // // Bersihkan tabel
+                        // table.clear();
+
+                        // // Tambahkan data baru ke tabel
+                        // response.data.forEach(row => {
+                        //     table.row.add([
+                        //         row.ranking,
+                        //         row.kelurahan,
+                        //         row.hasil,
+                        //     ]);
+                        // });
+
+                        // // Render ulang tabel
+                        // table.draw();
+                    },
+                    error: function() {
+                        alert('Gagal memuat data. Silakan coba lagi.');
+                    }
+                });
+            };
+        });
     </script>
 </body>
 
