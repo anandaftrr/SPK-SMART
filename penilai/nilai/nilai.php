@@ -175,11 +175,18 @@ if ($_SESSION['role'] != 'penilai') {
                                     <?php endforeach; ?>
                                 </tbody>
                             </table>
-                        </div>
-                        <div class="col-auto">
-                            <a href="/penilai/normalisasi/normalisasi.php?id_periode=<?= $_GET['id_periode'] ?>" class="btn btn-primary float-end">
-                                Normalisasi <i class="fas fa-arrow-right"></i>
-                            </a>
+                            <?php
+                            $checkPeriode = $koneksi->query(
+                                "SELECT * FROM periode WHERE id = " . $_GET['id_periode'] . ";"
+                            )->fetch_assoc();
+                            ?>
+                            <?php if ($checkPeriode['tutup_periode'] == '1'): ?>
+                                <div class="col-auto">
+                                    <a href="/penilai/normalisasi/normalisasi.php?id_periode=<?= $_GET['id_periode'] ?>" class="btn btn-primary float-end">
+                                        Normalisasi <i class="fas fa-arrow-right"></i>
+                                    </a>
+                                </div>
+                            <?php endif; ?>
                         </div>
                     </div>
                 </div>

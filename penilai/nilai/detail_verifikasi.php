@@ -179,11 +179,6 @@ $periode = $periode->fetch_assoc();
                                 );
 
                                 ?>
-                                <div class="col-auto">
-                                    <button type="submit" class="btn btn-primary float-end" data-bs-toggle="modal" data-bs-target="#datawilayahadd">
-                                        Simpan Data
-                                    </button>
-                                </div>
                             </div>
                             <?php
                             $bidangs = $koneksi->query(
@@ -281,12 +276,12 @@ $periode = $periode->fetch_assoc();
                                                     }
 
                                                     if ($adm_tak_bernilai['hasil_verifikasi'] == null) {
-                                                        echo '<div class="form-group p-2 m-1"><table style="width: 100%;"><tr><td style="width: 20%;"><span id="nilai' . $i . '">' . $pencaharian . '</span></td><td style="width: 10%;"></td>' . $show_bukti . '<td style="width: 20%;">Hasil verifikasi : <div class="form-check d-inline ms-3"><input class="form-check-input" type="radio" name="' . $adm_tak_bernilai['id'] . '" id="tgender' . $i . '" value="1"><label class="form-check-label" for="tgender' . $i . '">Benar</label></div><div class="form-check d-inline ms-3"><input class="form-check-input" type="radio" name="' . $adm_tak_bernilai['id'] . '" id="fgender' . $i . '" value="0"><label class="form-check-label" for="fgender' . $i . '">Salah</label></div></td></tr></table></div>';
+                                                        echo '<div class="form-group p-2 m-1"><table style="width: 100%;"><tr><td style="width: 40%;"><span id="nilai' . $i . '">' . $pencaharian . '</span></td>' . $show_bukti . '<td style="width: 20%;">Hasil verifikasi : <div class="form-check d-inline ms-3"><input class="form-check-input" type="radio" name="' . $adm_tak_bernilai['id'] . '" id="tgender' . $i . '" value="1"><label class="form-check-label" for="tgender' . $i . '">Benar</label></div><div class="form-check d-inline ms-3"><input class="form-check-input" type="radio" name="' . $adm_tak_bernilai['id'] . '" id="fgender' . $i . '" value="0"><label class="form-check-label" for="fgender' . $i . '">Salah</label></div></td></tr></table></div>';
                                                     } else {
                                                         if ($adm_tak_bernilai['hasil_verifikasi'] == '1') {
-                                                            echo '<div class="form-group p-2 m-1"><table style="width: 100%;"><tr><td style="width: 20%;"><span id="nilai' . $i . '">' . $pencaharian . '</span></td><td style="width: 10%;"></td>' . $show_bukti . '<td style="width: 20%;">Hasil verifikasi : <span class="badge rounded-pill bg-success">Benar</span></td><td style="width: 20%;">Verifikasi oleh : ' . $adm_tak_bernilai['username'] . '</td></tr></table></div>';
+                                                            echo '<div class="form-group p-2 m-1"><table style="width: 100%;"><tr><td style="width: 40%;"><span id="nilai' . $i . '">' . $pencaharian . '</span></td>' . $show_bukti . '<td style="width: 20%;">Hasil verifikasi : <span class="badge rounded-pill bg-success">Benar</span></td><td style="width: 20%;">Verifikasi oleh : ' . $adm_tak_bernilai['username'] . '</td></tr></table></div>';
                                                         } elseif ($adm_tak_bernilai['hasil_verifikasi'] == '0') {
-                                                            echo '<div class="form-group p-2 m-1"><table style="width: 100%;"><tr><td style="width: 20%;"><span id="nilai' . $i . '">' . $pencaharian . '</span></td><td style="width: 10%;"></td>' . $show_bukti . '<td style="width: 20%;">Hasil verifikasi : <span class="badge rounded-pill bg-danger">Salah</span></td><td style="width: 20%;">Verifikasi oleh : ' . $adm_tak_bernilai['username'] . '</td></tr></table></div>';
+                                                            echo '<div class="form-group p-2 m-1"><table style="width: 100%;"><tr><td style="width: 40%;"><span id="nilai' . $i . '">' . $pencaharian . '</span></td>' . $show_bukti . '<td style="width: 20%;">Hasil verifikasi : <span class="badge rounded-pill bg-danger">Salah</span></td><td style="width: 20%;">Verifikasi oleh : ' . $adm_tak_bernilai['username'] . '</td></tr></table></div>';
                                                         }
                                                     }
 
@@ -307,7 +302,6 @@ $periode = $periode->fetch_assoc();
                                                                     if ($adms) {
                                                                         foreach ($adms as $adm) {
                                                                             if ($adm['id_nilai_sub_indikator'] == $nilai_sub_indikator['id']) {
-
                                                                                 $file_bukti = $koneksi->query(
                                                                                     "SELECT * FROM sub_verifikasi_lapangan_bukti WHERE id_sub_verifikasi_lapangan = " . $adm['id'] . ";"
                                                                                 );
@@ -356,14 +350,13 @@ $periode = $periode->fetch_assoc();
                                                                                     </div>
                                                                                     </td>';
                                                                                 }
-
                                                                                 if ($adm['hasil_verifikasi'] == null) {
-                                                                                    echo '<table style="width: 100%;"><tr><td style="width: 20%;"><span id="nilai' . (($i == 171) ? $i + 1 : $i) . '">' . $nilai_sub_indikator['nama_nilai_sub_indikator'] . '</span></td><td style="width: 10%;">Poin : <span id="poin' . (($i == 171) ? $i + 1 : $i) . '">' . $nilai_sub_indikator['point'] . '</span></td>' . $show_bukti . '<td style="width: 20%;">Hasil verifikasi : <div class="form-check d-inline ms-3"><input class="form-check-input" type="radio" name="' . $adm['id'] . '" id="tgender' . $i . '" value="1"><label class="form-check-label" for="tgender' . $i . '">Benar</label></div><div class="form-check d-inline ms-3"><input class="form-check-input" type="radio" name="' . $adm['id'] . '" id="fgender' . $i . '" value="0"><label class="form-check-label" for="fgender' . $i . '">Salah</label></div></td></tr></table>';
+                                                                                    echo '<table style="width: 100%;"><tr><td style="width: 30%;"><span id="nilai' . (($i == 171) ? $i + 1 : $i) . '">' . $nilai_sub_indikator['nama_nilai_sub_indikator'] . '</span></td><td style="width: 10%;">Poin : <span id="poin' . (($i == 171) ? $i + 1 : $i) . '">' . $nilai_sub_indikator['point'] . '</span></td>' . $show_bukti . '<td style="width: 20%;">Hasil verifikasi : <div class="form-check d-inline ms-3"><input class="form-check-input" type="radio" name="' . $adm['id'] . '" id="tgender' . $i . '" value="1"><label class="form-check-label" for="tgender' . $i . '">Benar</label></div><div class="form-check d-inline ms-3"><input class="form-check-input" type="radio" name="' . $adm['id'] . '" id="fgender' . $i . '" value="0"><label class="form-check-label" for="fgender' . $i . '">Salah</label></div></td></tr></table>';
                                                                                 } else {
                                                                                     if ($adm['hasil_verifikasi'] == '1') {
-                                                                                        echo '<table style="width: 100%;"><tr><td style="width: 20%;"><span id="nilai' . (($i == 171) ? $i + 1 : $i) . '">' . $nilai_sub_indikator['nama_nilai_sub_indikator'] . '</span></td><td style="width: 10%;">Poin : <span id="poin' . (($i == 171) ? $i + 1 : $i) . '">' . $nilai_sub_indikator['point'] . '</span></td>' . $show_bukti . '<td style="width: 20%;">Hasil verifikasi : <span class="badge rounded-pill bg-success">Benar</span></td><td style="width: 20%;">Verifikasi oleh : ' . $adm['username'] . '</td></tr></table>';
+                                                                                        echo '<table style="width: 100%;"><tr><td style="width: 30%;"><span id="nilai' . (($i == 171) ? $i + 1 : $i) . '">' . $nilai_sub_indikator['nama_nilai_sub_indikator'] . '</span></td><td style="width: 10%;">Poin : <span id="poin' . (($i == 171) ? $i + 1 : $i) . '">' . $nilai_sub_indikator['point'] . '</span></td>' . $show_bukti . '<td style="width: 20%;">Hasil verifikasi : <span class="badge rounded-pill bg-success">Benar</span></td><td style="width: 20%;">Verifikasi oleh : ' . $adm['username'] . '</td></tr></table>';
                                                                                     } elseif ($adm['hasil_verifikasi'] == '0') {
-                                                                                        echo '<table style="width: 100%;"><tr><td style="width: 20%;"><span id="nilai' . (($i == 171) ? $i + 1 : $i) . '">' . $nilai_sub_indikator['nama_nilai_sub_indikator'] . '</span></td><td style="width: 10%;">Poin : <span id="poin' . (($i == 171) ? $i + 1 : $i) . '">' . $nilai_sub_indikator['point'] . '</span></td>' . $show_bukti . '<td style="width: 20%;">Hasil verifikasi : <span class="badge rounded-pill bg-danger">Salah</span></td><td style="width: 20%;">Verifikasi oleh : ' . $adm['username'] . '</td></tr></table>';
+                                                                                        echo '<table style="width: 100%;"><tr><td style="width: 30%;"><span id="nilai' . (($i == 171) ? $i + 1 : $i) . '">' . $nilai_sub_indikator['nama_nilai_sub_indikator'] . '</span></td><td style="width: 10%;">Poin : <span id="poin' . (($i == 171) ? $i + 1 : $i) . '">' . $nilai_sub_indikator['point'] . '</span></td>' . $show_bukti . '<td style="width: 20%;">Hasil verifikasi : <span class="badge rounded-pill bg-danger">Salah</span></td><td style="width: 20%;">Verifikasi oleh : ' . $adm['username'] . '</td></tr></table>';
                                                                                     }
                                                                                 }
                                                                             }

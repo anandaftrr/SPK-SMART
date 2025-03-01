@@ -56,6 +56,39 @@ $administrasi = $koneksi->query(
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.20/dist/sweetalert2.min.css">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.20/dist/sweetalert2.min.js"></script>
     <script src="https://cdn.ckeditor.com/ckeditor5/39.0.2/classic/ckeditor.js"></script>
+    <style>
+        /* Gaya untuk tombol Next dan Previous */
+        .carousel-control-prev-icon,
+        .carousel-control-next-icon {
+            background-color: black;
+            /* Ubah warna ikon */
+            border-radius: 50%;
+            /* Membuat tombol bulat */
+            padding: 15px;
+            /* Ukuran tombol */
+            width: 50px;
+            /* Lebar tombol */
+            height: 50px;
+            /* Tinggi tombol */
+        }
+
+        .carousel-control-prev,
+        .carousel-control-next {
+            z-index: 10;
+            /* Pastikan tombol berada di atas gambar */
+            opacity: 0.3;
+            /* Pastikan tombol terlihat */
+        }
+
+        /* Gaya saat tombol ditekan */
+        .carousel-control-prev:hover,
+        .carousel-control-next:hover {
+            background-color: rgba(0, 0, 0, 0.5);
+            /* Ubah latar belakang saat hover */
+            transition: background-color 0.3s ease;
+        }
+    </style>
+
 </head>
 
 <body class="hold-transition sidebar-mini">
@@ -80,16 +113,13 @@ $administrasi = $koneksi->query(
                     </div>
                 <?php endif; ?>
                 <!-- End Page Title -->
-                <!-- Home Page -->
-                <!-- Home Page -->
                 <div class="card">
                     <div class="card-body">
                         <div class="row">
-                            <div class="col">
-                            </div>
-                            <div class="col-auto">
+                            <div class="col-md-3">
                                 <div class="form-group">
-                                    <select name="orbitas" id="orbitas" class="form-control" onchange="changeAdministrasiPeriode(this.value)" required>
+                                    <select name="orbitas" id="orbitas" class="form-control" onchange="getADMPeriode(this.value)" required>
+                                        <option value="" selected disabled>--- Pilih Periode ---</option>
                                         <?php
                                         $user_id = $_SESSION['id_user'];
 
@@ -105,30 +135,7 @@ $administrasi = $koneksi->query(
                                         $id_kelurahan = $kelurahan['id'];
                                         ?>
                                         <?php foreach ($periods as $periode): ?>
-                                            <?php
-                                            $id_periode = $periode['id'];
-                                            $administrasi = $koneksi->query(
-                                                "SELECT * FROM administrasi, nilai_sub_indikator WHERE administrasi.id_kelurahan = '$id_kelurahan' AND administrasi.id_periode = $id_periode AND administrasi.id_nilai_sub_indikator = nilai_sub_indikator.id"
-                                            );
-                                            $val_administrasi = [$id_kelurahan, $id_periode];
-                                            if ($administrasi->num_rows == 0) {
-                                                // $val_administrasi = [$id_kelurahan, $id_periode, "-", "-", "-", "-", "-", "-", "-"];
-                                                for ($i = 0; $i < 179; $i++) {
-                                                    $val_administrasi[] = "-";
-                                                    $val_administrasi[] = "-";
-                                                }
-                                            } else {
-                                                // $administrasi = $administrasi->fetch_assoc();
-                                                foreach ($administrasi as $administrasi_satu) {
-                                                    $val_administrasi[] = $administrasi_satu['nama_nilai_sub_indikator'];
-                                                    $val_administrasi[] = $administrasi_satu['point'];
-                                                }
-                                            }
-
-                                            $val_administrasi = implode("| ", $val_administrasi);
-
-                                            ?>
-                                            <option value="<?= $val_administrasi ?>">Periode <?= $periode['periode'] ?> </option>
+                                            <option value="<?= $id_kelurahan . '|' . $periode['id'] ?>">Periode <?= $periode['periode'] ?> </option>
                                         <?php endforeach; ?>
                                     </select>
                                 </div>
@@ -146,111 +153,10 @@ $administrasi = $koneksi->query(
                             );
 
                             ?>
-                            <div class="col-auto">
-                                <a href="#" id="buttonEdit" onclick="periodeADMStat('<?= $id_kelurahan ?>','<?= $id_periode ?>')">
-                                    <button type="button" class="btn btn-success float-end" data-bs-toggle="modal" data-bs-target="#datawilayahedit">
-                                        <i class="fas fa-solid fa-edit"></i> Edit
-                                    </button>
-                                </a>
-                            </div>
                         </div>
-                        <?php
-                        $bidangs = $koneksi->query(
-                            "SELECT * FROM bidang"
-                        );
-                        $indikators = $koneksi->query(
-                            "SELECT * FROM indikator"
-                        );
-                        $sub_indikators = $koneksi->query(
-                            "SELECT * FROM sub_indikator"
-                        );
-                        $nilai_sub_indikators = $koneksi->query(
-                            "SELECT * FROM nilai_sub_indikator"
-                        );
-                        $i = 1;
-                        ?>
+                        <div id="data-adm">
 
-                        <?php foreach ($bidangs as $bidang): ?>
-                            <h4 class="mt-5" style="font-weight: bold;">Bidang <?= $bidang['nama_bidang'] ?></h4>
-                            <hr style="border: 1px solid black;">
-                            <?php foreach ($indikators as $indikator): ?>
-                                <?php if ($indikator['id_bidang'] == $bidang['id']): ?>
-                                    <div class="border border-secondary rounded m-3 p-2">
-                                        <h5 style="font-weight: bold;">Indikator: <?= $indikator['nama_indikator'] ?></h5>
-                                        <?php if ($indikator['id'] == '60'): ?>
-                                            <?php if ($administrasi_first->num_rows == 0): ?>
-                                                <div class="form-group p-2 m-1">
-                                                    <table style="width: 100%;">
-                                                        <tr>
-                                                            <td style="width: 50%;"><span id="nilai<?= $i ?>">-</span></td>
-                                                        </tr>
-                                                    </table>
-                                                </div>
-                                            <?php else: ?>
-                                                <?php
-
-                                                $adm_tak_bernilai = $koneksi->query(
-                                                    "SELECT * FROM administrasi WHERE id_kelurahan = '$id_kelurahan' AND id_periode = '$id_periode' AND tak_bernilai = '1'"
-                                                )->fetch_assoc();
-
-                                                if ($adm_tak_bernilai['id_nilai_sub_indikator'] == '372') {
-                                                    $pencaharian = 'Pertanian';
-                                                } elseif ($adm_tak_bernilai['id_nilai_sub_indikator'] == '373') {
-                                                    $pencaharian = 'Industri';
-                                                } elseif ($adm_tak_bernilai['id_nilai_sub_indikator'] == '374') {
-                                                    $pencaharian = 'Jasa';
-                                                }
-
-                                                echo '<div class="form-group p-2 m-1"><table style="width: 100%;"><tr><td style="width: 50%;"><span id="nilai' . $i . '">' . $pencaharian . '</span></td></tr></table></div>';
-
-                                                ?>
-                                            <?php endif; ?>
-                                        <?php else: ?>
-                                            <?php foreach ($sub_indikators as $sub_indikator): ?>
-                                                <?php if ($indikator['id'] == $sub_indikator['id_indikator']): ?>
-                                                    <div class="form-group p-2 m-1">
-                                                        <label for="usia_kurang_15"><?= $sub_indikator['nama_sub_indikator'] ?></label>
-                                                        <?php if ($administrasi_first->num_rows == 0): ?>
-                                                            <table style="width: 100%;">
-                                                                <tr>
-                                                                    <td style="width: 50%;"><span id="nilai<?= ($i == 171) ? $i + 1 : $i ?>">-</span></td>
-                                                                    <td style="width: 50%;">Poin : <span id="poin<?= ($i == 171) ? $i + 1 : $i ?>">-</span></td>
-                                                                </tr>
-                                                            </table>
-                                                        <?php else: ?>
-                                                            <?php foreach ($nilai_sub_indikators as $nilai_sub_indikator): ?>
-                                                                <?php if ($sub_indikator['id'] == $nilai_sub_indikator['id_sub_indikator']): ?>
-                                                                    <?php
-
-                                                                    $adms = $koneksi->query(
-                                                                        "SELECT * FROM administrasi WHERE id_kelurahan = '$id_kelurahan' AND id_periode = $id_periode"
-                                                                    );
-                                                                    if ($adms) {
-                                                                        foreach ($adms as $adm) {
-                                                                            if ($adm['id_nilai_sub_indikator'] == $nilai_sub_indikator['id']) {
-                                                                                echo '<table style="width: 100%;"><tr><td style="width: 50%;"><span id="nilai' . (($i == 171) ? $i + 1 : $i) . '">' . $nilai_sub_indikator['nama_nilai_sub_indikator'] . '</span></td><td style="width: 50%;">Poin : <span id="poin' . (($i == 171) ? $i + 1 : $i) . '">' . $nilai_sub_indikator['point'] . '</span></td></tr></table>';
-                                                                            }
-                                                                        }
-                                                                    }
-                                                                    ?>
-                                                                <?php endif; ?>
-                                                            <?php endforeach; ?>
-                                                        <?php endif; ?>
-                                                    </div>
-                                                    <?php
-                                                    if ($i == 171) {
-                                                        $i += 2;
-                                                    } else {
-                                                        $i++;
-                                                    }
-                                                    ?>
-                                                <?php endif; ?>
-                                            <?php endforeach; ?>
-                                        <?php endif; ?>
-                                    </div>
-                                <?php endif; ?>
-                            <?php endforeach; ?>
-                        <?php endforeach; ?>
+                        </div>
                     </div>
                 </div>
             </section>
@@ -275,33 +181,137 @@ $administrasi = $koneksi->query(
     </script>
 
     <script>
-        function changeAdministrasiPeriode(administrasi = null) {
-            // console.log(kelurahan_periode);
-            let resultArray = administrasi.split("| ");
+        function getADMPeriode(idkelperiod = null) {
+            let resultArray = idkelperiod.split("|");
+            let id_kelurahan = resultArray[0];
+            let id_periode = resultArray[1];
+            $.ajax({
+                url: 'getADM.php', // Endpoint PHP untuk mendapatkan data berdasarkan periode
+                type: 'POST',
+                data: {
+                    id_kelurahan: id_kelurahan,
+                    id_periode: id_periode
+                },
+                dataType: 'json',
+                success: function(response) {
+                    $('#data-adm').empty();
+                    let firstData = true;
+                    let dataADM = '';
+                    let previousNamaBidang = '';
+                    let previousNamaIndikator = '';
+                    response.data.forEach((item, index) => {
+                        if (item.nama_indikator !== previousNamaIndikator & firstData === false) {
+                            dataADM += '</div>';
+                        }
+                        if (item.nama_bidang !== previousNamaBidang) {
+                            dataADM += '<h4 class="mt-3" style="font-weight: bold;">Bidang ' + item.nama_bidang + '</h4>' +
+                                '<hr style="border: 1px solid black;">';
+                        }
+                        if (item.nama_indikator !== previousNamaIndikator) {
+                            dataADM += '<div class="border border-secondary rounded m-3 p-2">' +
+                                '<h5 style="font-weight: bold;">Indikator: ' + item.nama_indikator + '</h5>';
+                        }
+                        if (item.id_indikator !== 60) {
+                            dataADM += '<span class="ms-3"><strong>' + item.nama_sub_indikator + '</strong></span>';
+                        }
+                        if (item.id_nilai_sub_indikator === null) {
+                            if (item.tutup_periode_administrasi === '0') {
+                                dataADM += '<div class="row ms-3 mb-3">' +
+                                    '<div class="col">' +
+                                    '<a href="/kelurahan/tambah_adm.php?id_kelurahan=' + item.id_kelurahan + '&id_periode=' + item.id_periode + '&id_sub_indikator=' + item.id + '">' +
+                                    '<button type="button" class="btn btn-info btn-sm">' +
+                                    '<i class="fas fa-plus"> <span>Tambah Data</span></i>' +
+                                    '</button>' +
+                                    '</a>' +
+                                    '</div>' +
+                                    '</div>';
+                            } else {
+                                dataADM += '<table class="ms-3" style="width:100%;">' +
+                                    '<tr>' +
+                                    '<td style="width: 50%;"><span>-</span></td>' +
+                                    '<td style="width: 25%;">Poin : <span>-</span></td>' +
+                                    '<td style="width: 25%;">Bukti : -</td>' +
+                                    '</tr>' +
+                                    '</table>';
+                            }
+                        } else {
+                            let poinShow = (item.id_indikator !== 60) ? '<td style="width: 25%;">Poin : <span>' + item.point + '</span></td>' : '<td style="width: 25%;"></td>';
+                            dataADM += '<table style="width: 100%;" class="ms-3 mb-3">' +
+                                '<tr>' +
+                                '<td style="width: 50%;"><span>' + item.nama_nilai_sub_indikator + '</span></td>' +
+                                poinShow;
 
-            <?php
+                            if (item.file_bukti !== null) {
+                                dataADM += '<td style="width: 25%;">Bukti : ' +
+                                    '<button type="button" class="btn btn-info btn-sm" data-bs-toggle="modal" data-bs-target="#carouselModal' + item.id + '">' +
+                                    '<i class="fas fa-eye"></i>' +
+                                    '</button>' +
+                                    '<div class="modal fade" id="carouselModal' + item.id + '" tabindex="-1" role="dialog" aria-labelledby="carouselModalLabel" aria-hidden="true">' +
+                                    '<div class="modal-dialog modal-lg" role="document">' +
+                                    '<div class="modal-content">' +
+                                    '<div class="modal-header">' +
+                                    '<h5 class="modal-title" id="carouselModalLabel">Bukti' + item.id + '</h5>' +
+                                    '</div>' +
+                                    '<div class="modal-body">' +
+                                    '<!-- Carousel -->' +
+                                    '<div id="carouselExampleControls' + item.id + '" class="carousel slide" data-ride="carousel">' +
+                                    '<div class="carousel-inner">';
+                                item.file_bukti.forEach((fileBukti, index2) => {
+                                    console.log(fileBukti.file_bukti);
+                                    let carouselItemClass = (index2 === 0) ? 'carousel-item active' : 'carousel-item';
+                                    if (fileBukti.file_bukti.split('.').pop().toLowerCase() === 'pdf') {
+                                        dataADM += '<div class="' + carouselItemClass + '">' +
+                                            '<iframe src="/uploads/file_administrasi/' + fileBukti.file_bukti + '" width="100%" height="500px"></iframe>' +
+                                            '</div>';
+                                    } else {
+                                        dataADM += '<div class="' + carouselItemClass + '">' +
+                                            '<img src="/uploads/file_administrasi/' + fileBukti.file_bukti + '" class="d-block w-100" alt="Image 1">' +
+                                            '</div>';
 
-            for ($i = 1; $i <= 179; $i++) {
-                echo 'document.getElementById("nilai' . $i . '").textContent = resultArray[' . ($i * 2) . '];';
-                if ($i != 171) {
-                    echo 'document.getElementById("poin' . $i . '").textContent = resultArray[' . (($i * 2) + 1) . '];';
+                                    }
+                                });
+                                // dataADM += '<div class="carousel-item active">' +
+                                //     '<img src="/gambar/bukti/gambar-1.jpg" class="d-block w-100" alt="Image 1">' +
+                                //     '</div>' +
+                                //     '<div class="carousel-item">' +
+                                //     '<iframe src="/gambar/bukti/pdftes.pdf" width="100%" height="500px"></iframe>' +
+                                //     '</div>' +
+                                //     '<div class="carousel-item">' +
+                                //     '<img src="/gambar/bukti/gambar-3.jpg" class="d-block w-100" alt="Image 3">' +
+                                //     '</div>';
+
+                                dataADM += '</div>' +
+                                    '<a class="carousel-control-prev" href="#carouselExampleControls' + item.id + '" role="button" data-bs-slide="prev">' +
+                                    '<span class="carousel-control-prev-icon" aria-hidden="true"></span>' +
+                                    '<span class="sr-only">Previous</span>' +
+                                    '</a>' +
+                                    '<a class="carousel-control-next" href="#carouselExampleControls' + item.id + '" role="button" data-bs-slide="next">' +
+                                    '<span class="carousel-control-next-icon" aria-hidden="true"></span>' +
+                                    '<span class="sr-only">Next</span>' +
+                                    '</a>' +
+                                    '</div>' +
+                                    '</div>' +
+                                    '</div>' +
+                                    '</div>' +
+                                    '</div>' +
+                                    '</td>';
+                            } else {
+                                dataADM += '<td style="width: 25%;"></td>';
+                            }
+                            dataADM += '</tr>' +
+                                '</table>';
+                        }
+                        previousNamaBidang = item.nama_bidang;
+                        previousNamaIndikator = item.nama_indikator;
+                        firstData = false;
+                    });
+                    $('#data-adm').append(dataADM);
+                },
+                error: function(xhr, status, error) {
+                    console.log("AJAX Error: ", status, error);
+                    alert('Gagal memuat data. Silakan coba lagi.');
                 }
-            }
-
-            ?>
-
-            // Output the resulting array
-            // console.log(resultArray[6]);
-            // document.getElementById("usia_kurang_15").textContent = resultArray[2];
-            // document.getElementById("usia_15_56").textContent = resultArray[3];
-            // document.getElementById("usia_lebih_56").textContent = resultArray[4];
-            // document.getElementById("penduduk_total").textContent = resultArray[5];
-            // document.getElementById("penduduk_laki_laki").textContent = resultArray[6];
-            // document.getElementById("penduduk_perempuan").textContent = resultArray[7];
-            // document.getElementById("jumlah_kepala_keluarga").textContent = resultArray[8];
-
-            // document.getElementById("buttonEdit").setAttribute("href", "/kelurahan/edit_adm_kelurahan.php?id_kelurahan=" + resultArray[0] + "&id_periode=" + resultArray[1]);
-            document.getElementById("buttonEdit").setAttribute("onclick", "periodeADMStat('" + resultArray[0] + "','" + resultArray[1] + "')");
+            });
         }
     </script>
     <script>
@@ -327,20 +337,6 @@ $administrasi = $koneksi->query(
                         } else {
                             window.location.href = '/kelurahan/edit_adm_kelurahan.php?id_kelurahan=' + kelurahanId + '&id_periode=' + periodeId;
                         }
-                        // // Bersihkan tabel
-                        // table.clear();
-
-                        // // Tambahkan data baru ke tabel
-                        // response.data.forEach(row => {
-                        //     table.row.add([
-                        //         row.ranking,
-                        //         row.kelurahan,
-                        //         row.hasil,
-                        //     ]);
-                        // });
-
-                        // // Render ulang tabel
-                        // table.draw();
                     },
                     error: function() {
                         alert('Gagal memuat data. Silakan coba lagi.');

@@ -126,11 +126,13 @@ if ((isset($_GET['action'])) && ($_GET['action'] == 'editWawancara')) {
                                         <h5>Presentasi</h5>
                                     </div>
                                     <div class="col-md-6">
-                                        <div class="d-flex justify-content-end mb-3">
-                                            <button type="button" class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#editPresentasi">
-                                                <i class="fas fa-solid fa-edit"></i> Edit
-                                            </button>
-                                        </div>
+                                        <?php if ($periode['tutup_periode'] == '0'): ?>
+                                            <div class="d-flex justify-content-end mb-3">
+                                                <button type="button" class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#editPresentasi">
+                                                    <i class="fas fa-solid fa-edit"></i> Edit
+                                                </button>
+                                            </div>
+                                        <?php endif; ?>
                                     </div>
                                 </div>
                                 <div class="table-responsive">
@@ -169,11 +171,13 @@ if ((isset($_GET['action'])) && ($_GET['action'] == 'editWawancara')) {
                                         <h5>Wawancara</h5>
                                     </div>
                                     <div class="col-md-6">
-                                        <div class="d-flex justify-content-end mb-3">
-                                            <button type="button" class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#editWawancara">
-                                                <i class="fas fa-solid fa-edit"></i> Edit
-                                            </button>
-                                        </div>
+                                        <?php if ($periode['tutup_periode'] == '0'): ?>
+                                            <div class="d-flex justify-content-end mb-3">
+                                                <button type="button" class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#editWawancara">
+                                                    <i class="fas fa-solid fa-edit"></i> Edit
+                                                </button>
+                                            </div>
+                                        <?php endif; ?>
                                     </div>
                                 </div>
                                 <div class="table-responsive">
@@ -220,7 +224,7 @@ if ((isset($_GET['action'])) && ($_GET['action'] == 'editWawancara')) {
                         <?php endif; ?>
                     </div>
                 </div>
-                <div class="card">
+                <div class="card col-md-6">
                     <div class="card-body">
                         <div class="row">
                             <div class="col-md-6">
@@ -241,13 +245,23 @@ if ((isset($_GET['action'])) && ($_GET['action'] == 'editWawancara')) {
                                 <h5>Verifikasi Lapangan: <?= $total_nilai['total_nilai'] ? $total_nilai['total_nilai'] : '-' ?></h5>
                             </div>
                             <div class="col-md-6">
-                                <div class="d-flex justify-content-end">
-                                    <a href="/penilai/nilai/verifikasi.php?id_periode=<?= $id_periode ?>&id_alternatif=<?= $id_alternatif ?>">
-                                        <button type="button" class="btn btn-success btn-sm">
-                                            <i class="fas fa-solid fa-edit"></i> Verifikasi
-                                        </button>
-                                    </a>
-                                </div>
+                                <?php if ($periode['tutup_periode'] == '0'): ?>
+                                    <div class="d-flex justify-content-end">
+                                        <a href="/penilai/nilai/verifikasi.php?id_periode=<?= $id_periode ?>&id_alternatif=<?= $id_alternatif ?>">
+                                            <button type="button" class="btn btn-success btn-sm">
+                                                <i class="fas fa-solid fa-edit"></i> Verifikasi
+                                            </button>
+                                        </a>
+                                    </div>
+                                <?php else: ?>
+                                    <div class="d-flex justify-content-end">
+                                        <a href="/penilai/nilai/detail_verifikasi.php?id_periode=<?= $id_periode ?>&id_alternatif=<?= $id_alternatif ?>">
+                                            <button type="button" class="btn btn-success btn-sm">
+                                                <i class="fas fa-search"></i> Detail
+                                            </button>
+                                        </a>
+                                    </div>
+                                <?php endif; ?>
                             </div>
                         </div>
                         <div class="row">

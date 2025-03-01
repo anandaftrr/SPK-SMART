@@ -188,29 +188,59 @@ $periode = $periode->fetch_assoc();
                                                 <?php else: ?>
                                                     <?php foreach ($sub_indikators as $sub_indikator): ?>
                                                         <?php if ($indikator['id'] == $sub_indikator['id_indikator']): ?>
-                                                            <div class="form-group p-2 m-1">
-                                                                <label for="usia_kurang_15"><?= $sub_indikator['nama_sub_indikator'] ?></label>
-                                                                <select class="form-control" name="nilai_sub_indikator<?= $sub_indikator['id'] ?>" id="nilai_sub_indikator<?= $sub_indikator['id'] ?>">
-                                                                    <option value="" selected disabled>-Pilih-</option>
-                                                                    <?php foreach ($nilai_sub_indikators as $nilai_sub_indikator): ?>
-                                                                        <?php if ($sub_indikator['id'] == $nilai_sub_indikator['id_sub_indikator']): ?>
-                                                                            <option value="<?= $nilai_sub_indikator['id'] ?>"
-                                                                                <?php
+                                                            <div class="row">
+                                                                <div class="col-md-6">
+                                                                    <div class="form-group p-2 m-1">
+                                                                        <label for="usia_kurang_15"><?= $sub_indikator['nama_sub_indikator'] ?></label>
+                                                                        <select class="form-control" name="nilai_sub_indikator<?= $sub_indikator['id'] ?>" id="nilai_sub_indikator<?= $sub_indikator['id'] ?>">
+                                                                            <option value="" selected disabled>-Pilih-</option>
+                                                                            <?php foreach ($nilai_sub_indikators as $nilai_sub_indikator): ?>
+                                                                                <?php if ($sub_indikator['id'] == $nilai_sub_indikator['id_sub_indikator']): ?>
+                                                                                    <option value="<?= $nilai_sub_indikator['id'] ?>"
+                                                                                        <?php
 
-                                                                                $adms = $koneksi->query(
-                                                                                    "SELECT * FROM administrasi WHERE id_kelurahan = '$id_kelurahan' AND id_periode = $id_periode"
-                                                                                );
-                                                                                if ($adms) {
-                                                                                    foreach ($adms as $adm) {
-                                                                                        if ($adm['id_nilai_sub_indikator'] == $nilai_sub_indikator['id']) {
-                                                                                            echo 'selected';
+                                                                                        $adms = $koneksi->query(
+                                                                                            "SELECT * FROM administrasi WHERE id_kelurahan = '$id_kelurahan' AND id_periode = $id_periode"
+                                                                                        );
+                                                                                        if ($adms) {
+                                                                                            foreach ($adms as $adm) {
+                                                                                                if ($adm['id_nilai_sub_indikator'] == $nilai_sub_indikator['id']) {
+                                                                                                    echo 'selected';
+                                                                                                }
+                                                                                            }
                                                                                         }
-                                                                                    }
-                                                                                }
-                                                                                ?>><?= $nilai_sub_indikator['nama_nilai_sub_indikator'] ?></option>
-                                                                        <?php endif; ?>
-                                                                    <?php endforeach; ?>
-                                                                </select>
+                                                                                        ?>><?= $nilai_sub_indikator['nama_nilai_sub_indikator'] ?></option>
+                                                                                <?php endif; ?>
+                                                                            <?php endforeach; ?>
+                                                                        </select>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-md-6">
+                                                                    <div class="form-group p-2 m-1">
+                                                                        <label class="text-secondary" for="usia_kurang_15"><i>Bukti<?= ($sub_indikator['butuh_bukti'] == '1') ? '<span class="text-danger">*</span>' : '' ?></i></label>
+                                                                        <select class="form-control" name="nilai_sub_indikator<?= $sub_indikator['id'] ?>" id="nilai_sub_indikator<?= $sub_indikator['id'] ?>">
+                                                                            <option value="" selected disabled>-Pilih-</option>
+                                                                            <?php foreach ($nilai_sub_indikators as $nilai_sub_indikator): ?>
+                                                                                <?php if ($sub_indikator['id'] == $nilai_sub_indikator['id_sub_indikator']): ?>
+                                                                                    <option value="<?= $nilai_sub_indikator['id'] ?>"
+                                                                                        <?php
+
+                                                                                        $adms = $koneksi->query(
+                                                                                            "SELECT * FROM administrasi WHERE id_kelurahan = '$id_kelurahan' AND id_periode = $id_periode"
+                                                                                        );
+                                                                                        if ($adms) {
+                                                                                            foreach ($adms as $adm) {
+                                                                                                if ($adm['id_nilai_sub_indikator'] == $nilai_sub_indikator['id']) {
+                                                                                                    echo 'selected';
+                                                                                                }
+                                                                                            }
+                                                                                        }
+                                                                                        ?>><?= $nilai_sub_indikator['nama_nilai_sub_indikator'] ?></option>
+                                                                                <?php endif; ?>
+                                                                            <?php endforeach; ?>
+                                                                        </select>
+                                                                    </div>
+                                                                </div>
                                                             </div>
                                                         <?php endif; ?>
                                                     <?php endforeach; ?>

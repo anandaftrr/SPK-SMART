@@ -43,6 +43,18 @@ if ((isset($_GET['tutup_adm'])) && ($_GET['tutup_adm'] == true)) {
             $insert = $koneksi->query(
                 "INSERT INTO sub_verifikasi_lapangan (id_alternatif, id_nilai_sub_indikator, tak_bernilai) VALUES ($id_alternatif, $id_nilai_sub_indikator, '$tak_bernilai')"
             );
+
+            $id_sub_verifikasi_lapangan = $koneksi->insert_id;
+
+            $file_bukti_adm = $koneksi->query(
+                "SELECT * FROM administrasi_bukti WHERE id_administrasi = " . $data_administrasi_item['id_administrasi'] . ";"
+            );
+
+            foreach ($file_bukti_adm as $fba) {
+                $insert = $koneksi->query(
+                    "INSERT INTO sub_verifikasi_lapangan_bukti (id_sub_verifikasi_lapangan, file_bukti) VALUES ($id_sub_verifikasi_lapangan, '" . $fba['file_bukti'] . "')"
+                );
+            }
         }
     }
     $periode = $koneksi->query(
