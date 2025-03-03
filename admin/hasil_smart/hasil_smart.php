@@ -77,6 +77,33 @@ if ($_SESSION['role'] != 'admin') {
                                 </div>
                             </div>
                         </div>
+                        <div class="row">
+                            <div class="col">
+                            </div>
+                            <?php
+                            $periods = $koneksi->query(
+                                'SELECT * FROM periode ORDER BY id DESC'
+                            );
+                            $data = $periods->fetch_assoc();
+                            ?>
+                            <div class="col-auto" id="but-cetak">
+                                <?php if ($data['tutup_periode'] == '1') : ?>
+                                    <a class="btn btn-success mb-3" href="/laporan/cetak.php?id_periode=<?= $data['id'] ?>" target="_blank">
+                                        <i class="fas fa-print"></i> Cetak Laporan
+                                    </a>
+                                <?php else: ?>
+                                    <script>
+                                        Swal.fire({
+                                            icon: 'warning',
+                                            title: 'Periode tahun <?= $data['periode'] ?> belum ditutup!',
+                                            text: 'Anda harus menutup periode terlebih dahulu untuk melihat hasil SMART. Pastikan penilai sudah menginputkan semua penilaian pada periode tahun <?= $data['periode'] ?>!',
+                                            confirmButtonText: 'OK',
+                                            allowOutsideClick: false, // Mencegah menutup dengan klik di luar modal
+                                        });
+                                    </script>
+                                <?php endif; ?>
+                            </div>
+                        </div>
                         <div class="table-responsive">
                             <table id="myTable" class="table table-striped" style="width:100%; text-align: center;">
                                 <thead>
@@ -154,7 +181,6 @@ if ($_SESSION['role'] != 'admin') {
 
             // Fungsi untuk mengganti data tabel sesuai periode
             window.changeKelurahanPeriode = function(periodeId) {
-                console.log(periodeId);
                 $.ajax({
                     url: 'get_data.php', // Endpoint PHP untuk mendapatkan data berdasarkan periode
                     type: 'POST',
@@ -177,6 +203,24 @@ if ($_SESSION['role'] != 'admin') {
 
                         // Render ulang tabel
                         table.draw();
+
+                        let buttonCetak = '';
+                        $('#but-cetak').empty();
+                        if (response.periode.tutup_periode === '1') {
+                            buttonCetak += '<a class="btn btn-success mb-3" href="/laporan/cetak.php?id_periode=' + response.periode.id + '" target="_blank">' +
+                                '<i class="fas fa-print"></i> Cetak Laporan' +
+                                '</a>';
+                        } else if (response.periode.tutup_periode === '0') {
+                            buttonCetak += '';
+                            Swal.fire({
+                                icon: 'warning',
+                                title: 'Periode belum ditutup!',
+                                text: 'Anda harus menutup periode terlebih dahulu untuk melihat hasil SMART. Pastikan penilai sudah menginputkan semua penilaian pada periode ini!',
+                                confirmButtonText: 'OK',
+                                allowOutsideClick: false, // Mencegah menutup dengan klik di luar modal
+                            });
+                        }
+                        $('#but-cetak').append(buttonCetak);
                     },
                     error: function() {
                         alert('Gagal memuat data. Silakan coba lagi.');

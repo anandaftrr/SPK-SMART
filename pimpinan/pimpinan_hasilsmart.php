@@ -61,6 +61,33 @@ if ($_SESSION['role'] != 'pimpinan') {
                 <!-- Home Page -->
                 <div class="card">
                     <div class="card-body">
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                            </div>
+                            <div class="col-auto ms-auto"> <!-- Menggunakan ms-auto untuk margin start otomatis -->
+                                <?php
+                                $periods = $koneksi->query(
+                                    'SELECT * FROM periode WHERE id = ' . $_GET['id_periode']
+                                );
+                                $data = $periods->fetch_assoc();
+                                ?>
+                                <?php if ($data['tutup_periode'] == '1') : ?>
+                                    <a class="btn btn-success" href="/laporan/cetak.php?id_periode=<?= $_GET['id_periode'] ?>" target="_blank">
+                                        <i class="fas fa-print"></i> Cetak Laporan
+                                    </a>
+                                <?php else: ?>
+                                    <script>
+                                        Swal.fire({
+                                            icon: 'warning',
+                                            title: 'Periode tahun <?= $data['periode'] ?> belum ditutup!',
+                                            text: 'Periode terlebih dahulu harus ditutup oleh admin untuk melihat hasil SMART. Pastikan penilai sudah menginputkan semua penilaian pada periode tahun <?= $data['periode'] ?>!',
+                                            confirmButtonText: 'OK',
+                                            allowOutsideClick: false, // Mencegah menutup dengan klik di luar modal
+                                        });
+                                    </script>
+                                <?php endif; ?>
+                            </div>
+                        </div>
                         <div class="table-responsive">
                             <table id="myTable" class="table table-striped" style="width:100%; text-align: center;">
                                 <thead>

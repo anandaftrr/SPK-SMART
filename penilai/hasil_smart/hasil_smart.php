@@ -70,9 +70,14 @@ if ($_SESSION['role'] != 'penilai') {
                     <div class="card-body">
                         <div class="row">
                             <div class="col-md-12">
-                                <div class="row">
+                                <div class="row mb-3">
                                     <div class="col-md-6">
                                         <h5>Nilai Akhir</h5>
+                                    </div>
+                                    <div class="col-auto ms-auto"> <!-- Menggunakan ms-auto untuk margin start otomatis -->
+                                        <a class="btn btn-success" href="/laporan/cetak.php?id_periode=<?= $_GET['id_periode'] ?>" target="_blank">
+                                            <i class="fas fa-print"></i> Cetak Laporan
+                                        </a>
                                     </div>
                                 </div>
                                 <div class="table-responsive">

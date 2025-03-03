@@ -28,8 +28,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $i++;
     }
 
+    $data_periode = $koneksi->query(
+        "SELECT * FROM periode WHERE id = $periode"
+    )->fetch_assoc();
+
     // Output JSON
     header('Content-Type: application/json');
-    echo json_encode(['data' => $data]);
+    echo json_encode(['data' => $data, 'periode' => $data_periode]);
     exit;
 }
