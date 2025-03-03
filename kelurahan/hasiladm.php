@@ -136,10 +136,14 @@ if ($_SESSION['role'] != 'kelurahan') {
                                     );
                                     $administrasi_first = $administrasi_first->fetch_assoc();
 
+                                    $kelurahan = $koneksi->query(
+                                        "SELECT * FROM kelurahan WHERE id = '$id_kelurahan'"
+                                    )->fetch_assoc();
+
                                     ?>
                                 </div>
                                 <center>
-                                    <h4>Total Nilai Akhir <?= $id_kelurahan ?> <span id="periode">Periode <?= $data['periode'] ?></span></h4>
+                                    <h4>Total Nilai Akhir <?= $kelurahan['kelurahan'] ?> <span id="periode">Periode <?= $data['periode'] ?></span></h4>
                                 </center>
                                 <center>
                                     <h1 id="total_nilai_akhir" class="pagetitle p-2"><?= $administrasi_first['total_nilai_akhir'] ? $administrasi_first['total_nilai_akhir'] : '-' ?></h1>
