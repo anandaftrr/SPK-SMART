@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:3306
--- Generation Time: Mar 01, 2025 at 11:02 AM
+-- Generation Time: Mar 04, 2025 at 03:12 AM
 -- Server version: 8.0.30
 -- PHP Version: 8.1.10
 
@@ -1199,18 +1199,6 @@ INSERT INTO `alternatif` (`id`, `id_periode`, `id_kelurahan`) VALUES
 -- --------------------------------------------------------
 
 --
--- Table structure for table `assesment`
---
-
-CREATE TABLE `assesment` (
-  `id` int NOT NULL,
-  `id_user` int NOT NULL,
-  `tahun` year NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-
--- --------------------------------------------------------
-
---
 -- Table structure for table `bidang`
 --
 
@@ -1231,20 +1219,6 @@ INSERT INTO `bidang` (`id`, `nama_bidang`) VALUES
 -- --------------------------------------------------------
 
 --
--- Table structure for table `detail_assesment`
---
-
-CREATE TABLE `detail_assesment` (
-  `id` int NOT NULL,
-  `id_assesment` int NOT NULL,
-  `id_sub_indikator` int NOT NULL,
-  `point` int NOT NULL,
-  `verifikasi` tinyint(1) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-
--- --------------------------------------------------------
-
---
 -- Table structure for table `hasil`
 --
 
@@ -1259,10 +1233,10 @@ CREATE TABLE `hasil` (
 --
 
 INSERT INTO `hasil` (`id`, `id_alternatif`, `hasil`) VALUES
-(469, 20, 0.693),
-(470, 21, 0.397),
-(471, 22, 0.127),
-(472, 23, 0.366);
+(553, 20, 0.693),
+(554, 21, 0.397),
+(555, 22, 0.127),
+(556, 23, 0.366);
 
 -- --------------------------------------------------------
 
@@ -1830,18 +1804,18 @@ CREATE TABLE `penilaian` (
 --
 
 INSERT INTO `penilaian` (`id`, `id_alternatif`, `id_kriteria`, `nilai`) VALUES
-(85, 20, 1, 93.000),
-(86, 21, 1, 87.000),
-(87, 22, 1, 77.000),
-(88, 23, 1, 80.000),
-(89, 20, 2, 75.000),
-(90, 21, 2, 75.000),
-(91, 22, 2, 83.333),
-(92, 23, 2, 100.000),
-(93, 20, 3, 220.000),
-(94, 21, 3, 205.000),
-(95, 22, 3, 190.000),
-(96, 23, 3, 188.000);
+(337, 20, 1, 93.000),
+(338, 21, 1, 87.000),
+(339, 22, 1, 77.000),
+(340, 23, 1, 80.000),
+(341, 20, 2, 75.000),
+(342, 21, 2, 75.000),
+(343, 22, 2, 83.333),
+(344, 23, 2, 100.000),
+(345, 20, 3, 220.000),
+(346, 21, 3, 205.000),
+(347, 22, 3, 190.000),
+(348, 23, 3, 188.000);
 
 -- --------------------------------------------------------
 
@@ -2930,25 +2904,10 @@ ALTER TABLE `alternatif`
   ADD KEY `id_kelurahan` (`id_kelurahan`);
 
 --
--- Indexes for table `assesment`
---
-ALTER TABLE `assesment`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `FK_assestment_id_user` (`id_user`);
-
---
 -- Indexes for table `bidang`
 --
 ALTER TABLE `bidang`
   ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `detail_assesment`
---
-ALTER TABLE `detail_assesment`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `FK_detail_assesment_id_assesment` (`id_assesment`),
-  ADD KEY `FK_detail_assesment_id_sub_indikator` (`id_sub_indikator`);
 
 --
 -- Indexes for table `hasil`
@@ -3079,7 +3038,7 @@ ALTER TABLE `bidang`
 -- AUTO_INCREMENT for table `hasil`
 --
 ALTER TABLE `hasil`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=473;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=557;
 
 --
 -- AUTO_INCREMENT for table `indikator`
@@ -3103,7 +3062,7 @@ ALTER TABLE `nilai_sub_indikator`
 -- AUTO_INCREMENT for table `penilaian`
 --
 ALTER TABLE `penilaian`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=97;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=349;
 
 --
 -- AUTO_INCREMENT for table `periode`
@@ -3171,19 +3130,6 @@ ALTER TABLE `administrasi_bukti`
 ALTER TABLE `alternatif`
   ADD CONSTRAINT `alternatif_ibfk_1` FOREIGN KEY (`id_periode`) REFERENCES `periode` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   ADD CONSTRAINT `alternatif_ibfk_2` FOREIGN KEY (`id_kelurahan`) REFERENCES `kelurahan` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
-
---
--- Constraints for table `assesment`
---
-ALTER TABLE `assesment`
-  ADD CONSTRAINT `FK_assestment_id_user` FOREIGN KEY (`id_user`) REFERENCES `users` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT;
-
---
--- Constraints for table `detail_assesment`
---
-ALTER TABLE `detail_assesment`
-  ADD CONSTRAINT `FK_detail_assesment_id_assesment` FOREIGN KEY (`id_assesment`) REFERENCES `assesment` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT,
-  ADD CONSTRAINT `FK_detail_assesment_id_sub_indikator` FOREIGN KEY (`id_sub_indikator`) REFERENCES `sub_indikator` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT;
 
 --
 -- Constraints for table `hasil`
